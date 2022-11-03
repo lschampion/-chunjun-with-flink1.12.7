@@ -105,6 +105,8 @@ public class Main {
         LOG.info("-------------------------------------------");
 
         Options options = new OptionParser(args).getOptions();
+        LOG.info("options:\n"+options);
+
         String job = URLDecoder.decode(options.getJob(), StandardCharsets.UTF_8.name());
         String replacedJob = JobUtil.replaceJobParameter(options.getP(), job);
         Properties confProperties = PropertiesUtil.parseConf(options.getConfProp());
@@ -309,7 +311,6 @@ public class Main {
      */
     private static void configStreamExecutionEnvironment(
             StreamExecutionEnvironment env, Options options, SyncConf config) {
-
         if (config != null) {
             PluginUtil.registerPluginUrlToCachedFile(options, config, env);
             env.setParallelism(config.getSpeed().getChannel());

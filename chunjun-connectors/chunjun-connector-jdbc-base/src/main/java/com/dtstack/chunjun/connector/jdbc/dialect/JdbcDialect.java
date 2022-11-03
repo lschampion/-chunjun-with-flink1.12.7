@@ -174,7 +174,6 @@ public interface JdbcDialect extends Serializable {
 
             sb.append(quoteIdentifier(strings[i]));
         }
-
         return sb.toString();
     }
 

@@ -1,0 +1,103 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "column": [
+              {
+                "name": "s_id",
+                "type": "int"
+              },
+              {
+                "name": "s_name",
+                "type": "string"
+              },
+              {
+                "name": "s_birth",
+                "type": "date"
+              },
+              {
+                "name": "s_sex",
+                "type": "varchar"
+              },
+              {
+                "name": "c_time",
+                "type": "datetime"
+              }
+            ],
+            "customSql": "",
+            "where": "1=1",
+            "splitPk": "s_id",
+            "increColumn": "s_id",
+            "startLocation": "2",
+            "polling": true,
+            "pollingInterval": 3000,
+            "queryTimeOut": 1000,
+            "username": "root",
+            "password": "123456",
+            "connection": [
+              {
+                "jdbcUrl": [
+                  "jdbc:mysql://localhost:3306/test?useSSL=false"
+                ],
+                "table": [
+                  "student"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "mysqlwriter",
+          "parameter": {
+            "username": "root",
+            "password": "123456",
+            "connection": [
+              {
+                "jdbcUrl": "jdbc:mysql://localhost:3306/test?useSSL=false",
+                "table": [
+                  "student_sync"
+                ]
+              }
+            ],
+            "writeMode": "update",
+            "flushIntervalMills":"3000",
+            "column": [
+              {
+                "name": "s_id",
+                "type": "int"
+              },
+              {
+                "name": "s_name",
+                "type": "string"
+              },
+              {
+                "name": "s_birth",
+                "type": "date"
+              },
+              {
+                "name": "s_sex",
+                "type": "varchar"
+              },
+              {
+                "name": "c_time",
+                "type": "datetime"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "setting": {
+      "restore": {
+        "restoreColumnName": "s_id"
+      },
+      "speed": {
+        "channel": 1,
+        "bytes": 0
+      }
+    }
+  }
+}

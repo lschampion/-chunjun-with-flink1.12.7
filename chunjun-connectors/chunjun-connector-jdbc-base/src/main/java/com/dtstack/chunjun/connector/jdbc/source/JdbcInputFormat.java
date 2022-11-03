@@ -524,7 +524,7 @@ public class JdbcInputFormat extends BaseRichInputFormat {
         } else {
             LOG.debug("polling startLocation = {}", startLocation);
         }
-
+        //
         incrementKeyUtil.setPsWithLocationStr(ps, 1, startLocation);
         resultSet = ps.executeQuery();
         hasNext = resultSet.next();
@@ -627,6 +627,7 @@ public class JdbcInputFormat extends BaseRichInputFormat {
         if (step.compareTo(BigDecimal.ZERO) == 0) {
             // if left = right，step and remainder is 0
             if (remainder.compareTo(BigDecimal.ZERO) == 0) {
+                // 就一条数据
                 minNumSplits = 1;
             } else {
                 minNumSplits = remainder.intValue();
@@ -636,6 +637,7 @@ public class JdbcInputFormat extends BaseRichInputFormat {
         splits = new JdbcInputSplit[minNumSplits];
         BigDecimal start;
         BigDecimal end = left;
+        // minNumSplits：分片的数量
         for (int i = 0; i < minNumSplits; i++) {
             start = end;
             end = start.add(step);
@@ -742,8 +744,7 @@ public class JdbcInputFormat extends BaseRichInputFormat {
                 resultSet = ps.executeQuery();
                 hasNext = resultSet.next();
                 // 每隔五分钟打印一次，(当前时间 - 任务开始时间) % 300秒 <= 一个间隔轮询周期
-                if ((System.currentTimeMillis() - startTime) % 300000
-                        <= jdbcConf.getPollingInterval()) {
+                if ((System.currentTimeMillis() - startTime) % 300000 <= jdbcConf.getPollingInterval()) {
                     LOG.info(
                             "no record matched condition in database, execute query sql = {}, startLocation = {}",
                             jdbcConf.getQuerySql(),

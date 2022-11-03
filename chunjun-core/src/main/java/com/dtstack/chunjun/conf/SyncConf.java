@@ -18,12 +18,15 @@
 package com.dtstack.chunjun.conf;
 
 import com.dtstack.chunjun.cdc.CdcConf;
+import com.dtstack.chunjun.decoder.JsonDecoder;
 import com.dtstack.chunjun.mapping.NameMappingConf;
 import com.dtstack.chunjun.util.GsonUtil;
 
 import org.apache.flink.util.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,6 +39,7 @@ import java.util.Map;
  */
 public class SyncConf implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = LoggerFactory.getLogger(SyncConf.class);
 
     /** ChunJun job */
     private JobConf job;
@@ -57,8 +61,10 @@ public class SyncConf implements Serializable {
      * @return ChunJunJobConfig
      */
     public static SyncConf parseJob(String jobJson) {
+        // 解析job文件主方法：
         SyncConf config = GsonUtil.GSON.fromJson(jobJson, SyncConf.class);
         checkJob(config);
+        LOG.info("SyncConf:\n"+config.toString());
         return config;
     }
 

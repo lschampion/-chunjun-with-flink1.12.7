@@ -28,6 +28,7 @@ import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;

@@ -41,13 +41,15 @@ public class LocalTest {
     public static void main(String[] args) throws Exception {
         LOG.warn("-----");
         Properties confProperties = new Properties();
-        //        confProperties.setProperty("flink.checkpoint.interval", "30000");
-        //        confProperties.setProperty("state.backend","ROCKSDB");
-        //        confProperties.setProperty("state.checkpoints.num-retained", "10");
-        //        confProperties.setProperty("state.checkpoints.dir", "file:///ck");
+//                confProperties.setProperty("flink.checkpoint.interval", "30000");
+//                confProperties.setProperty("state.backend","ROCKSDB");
+//                confProperties.setProperty("state.checkpoints.num-retained", "10");
+//                confProperties.setProperty("state.checkpoints.dir", "file:///ck");
         String userDir = System.getProperty("user.dir");
-
-        String jobPath = userDir + "/chunjun-examples/json/stream/stream.json";
+        System.out.println("user.dir: "+userDir);
+//        String jobPath = userDir + "/chunjun-examples/json/stream/stream.json";
+        String jobPath = userDir + "/chunjun-examples/json/mysql/mysql_mysql_cdc_transform-test.json";
+//        String jobPath = userDir + "/chunjun-examples/json/mysql/mysql_mysql_realtime_test.json";
         String chunjunDistDir = userDir + "/start-chunjun-dist";
         String s = "";
 

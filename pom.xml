@@ -28,7 +28,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<target.java.version>1.8</target.java.version>
 		<flink.version>1.12.7</flink.version>
-		<flinkcdc.version>1.3.0</flinkcdc.version>
+		<flinkcdc.version>2.2.1</flinkcdc.version>
 		<scala.binary.version>2.12</scala.binary.version>
 		<prometheus.version>0.8.1</prometheus.version>
 		<hadoop.version>3.1.4</hadoop.version>
@@ -77,6 +77,11 @@
 	</licenses>
 
 	<dependencies>
+<!--		<dependency>-->
+<!--			<groupId>mysql</groupId>-->
+<!--			<artifactId>mysql-connector-java</artifactId>-->
+<!--			<version>8.0.21</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -259,6 +264,11 @@
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-annotations</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-table-common</artifactId>
 			<version>${flink.version}</version>
 		</dependency>
 		<dependency>

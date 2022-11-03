@@ -78,7 +78,7 @@ public class FieldNamedPreparedStatementImpl implements FieldNamedPreparedStatem
     }
 
     /**
-     * Parses a sql with named parameters. The parameter-index mappings are put into the map, and
+     * Parses a sql with named parameters(格式：`:字段名称`). The parameter-index mappings are put into the map, and
      * the parsed sql is returned.
      *
      * @param sql sql to parse

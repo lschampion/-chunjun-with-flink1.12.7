@@ -20,8 +20,11 @@ package com.dtstack.chunjun.element;
 import com.dtstack.chunjun.element.column.NullColumn;
 import com.dtstack.chunjun.throwable.ChunJunRuntimeException;
 
+import com.dtstack.chunjun.typeutil.GenericRowDataTypeConverter;
+
 import org.apache.flink.table.data.ArrayData;
 import org.apache.flink.table.data.DecimalData;
+import org.apache.flink.table.data.GenericRowData;
 import org.apache.flink.table.data.MapData;
 import org.apache.flink.table.data.RawValueData;
 import org.apache.flink.table.data.RowData;
@@ -70,6 +73,18 @@ public final class ColumnRowData implements RowData, Serializable {
         this.columnList = new ArrayList<>(arity);
         this.kind = kind;
         this.byteSize = byteSize;
+    }
+    public ColumnRowData(GenericRowData rowData) {
+        int arity = rowData.getArity();
+        this.columnList = new ArrayList<>(arity);
+        int size=0;
+        for (int i=0;i<arity;i++){
+            AbstractBaseColumn field = GenericRowDataTypeConverter.apply(rowData.getField(i));
+            columnList.add(field);
+            size+=field.byteSize;
+        }
+        this.kind = rowData.getRowKind();
+        this.byteSize =size ;
     }
 
     public ColumnRowData(int arity) {
@@ -169,6 +184,12 @@ public final class ColumnRowData implements RowData, Serializable {
         }
         this.columnList.set(pos, value);
         byteSize += value.byteSize;
+    }
+    public ColumnRowData setColumnList(List<AbstractBaseColumn> in){
+        if(in !=null &&  in.size()>0){
+            this.columnList.addAll(in);
+        }
+        return this;
     }
 
     public AbstractBaseColumn getField(int pos) {

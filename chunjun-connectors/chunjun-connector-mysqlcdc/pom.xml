@@ -23,16 +23,22 @@
 			<artifactId>chunjun-connector-jdbc-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.46</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.4</version>
+			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>com.alibaba.ververica</groupId>
+			<groupId>com.ververica</groupId>
+			<!-- add the dependency matching your database -->
 			<artifactId>flink-connector-mysql-cdc</artifactId>
+			<!-- The dependency is available only for stable releases, SNAPSHOT dependency need build by yourself. -->
 			<version>${flinkcdc.version}</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>

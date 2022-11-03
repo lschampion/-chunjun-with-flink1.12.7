@@ -52,7 +52,6 @@ public class ValueUtil {
         if (obj == null) {
             return null;
         }
-
         if (obj instanceof String) {
             return Long.valueOf((String) obj);
         } else if (obj instanceof Long) {

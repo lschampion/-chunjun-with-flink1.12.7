@@ -227,6 +227,7 @@ public class DateUtil {
                 Date date = datetimeFormatter.get().get(DATE_FORMAT).parse(START_TIME);
                 Calendar cal = Calendar.getInstance();
                 long addMill = date.getTime() + day * 24 * 3600 * 1000;
+                // TODO: 为什么要转一下？
                 cal.setTimeInMillis(addMill);
                 time = cal.getTimeInMillis();
             } catch (Exception ignore) {

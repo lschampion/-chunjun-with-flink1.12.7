@@ -114,7 +114,7 @@ public abstract class SourceFactory implements RawTypeConvertible {
                             }
                         });
     }
-
+    // TODO: 需要进一步理解 DataSource
     protected DataStream<RowData> createInput(
             InputFormat<RowData, InputSplit> inputFormat, String sourceName) {
         Preconditions.checkNotNull(sourceName);

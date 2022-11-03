@@ -150,7 +150,7 @@ public class DynamicPreparedStmt {
                 // TODO 异常如何处理
                 LOG.warn("not support RowKind: {}", rowKind);
         }
-
+        LOG.info("DynamicPreparedStmt.prepareTemplates: ",singleSql);
         return singleSql;
     }
 

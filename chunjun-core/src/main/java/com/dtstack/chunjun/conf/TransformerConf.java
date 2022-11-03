@@ -17,6 +17,9 @@
  */
 package com.dtstack.chunjun.conf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 
 /**
@@ -25,12 +28,14 @@ import java.io.Serializable;
  * @author tudou
  */
 public class TransformerConf implements Serializable {
+    private static final Logger LOG = LoggerFactory.getLogger(SettingConf.class);
     private static final long serialVersionUID = 1L;
 
     /** 转换SQL */
     private String transformSql;
 
     public String getTransformSql() {
+        LOG.info("TransformerConf:\n"+transformSql);
         return transformSql;
     }
 

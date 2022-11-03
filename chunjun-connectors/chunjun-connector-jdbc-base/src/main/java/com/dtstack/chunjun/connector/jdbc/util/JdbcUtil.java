@@ -145,6 +145,7 @@ public class JdbcUtil {
                 if (ALL_TABLE.equalsIgnoreCase(tableName.trim())) {
                     return Pair.of(new LinkedList<>(), new LinkedList<>());
                 }
+                // TODO： 先判断有cataLog的情况。
                 ResultSet tableRs =
                         dbConn.getMetaData().getTables(cataLog, schema, tableName, null);
                 if (!tableRs.next()) {
@@ -493,6 +494,7 @@ public class JdbcUtil {
 
     /** 解析schema.table 或者 "schema"."table"等格式的表名 获取对应的schema以及table * */
     public static void resetSchemaAndTable(JdbcConf jdbcConf, String leftQuote, String rightQuote) {
+        // (?i) 忽略大小写。
         String pattern =
                 String.format(
                         "(?i)(%s(?<schema>(.*))%s\\.%s(?<table>(.*))%s)",

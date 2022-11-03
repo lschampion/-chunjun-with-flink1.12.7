@@ -17,6 +17,9 @@
  */
 package com.dtstack.chunjun.conf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.StringJoiner;
 
@@ -27,6 +30,7 @@ import java.util.StringJoiner;
  */
 public class SettingConf implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = LoggerFactory.getLogger(SettingConf.class);
 
     /** 速率及通道配置 */
     private SpeedConf speed = new SpeedConf();

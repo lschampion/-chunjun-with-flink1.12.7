@@ -131,8 +131,7 @@ public abstract class AbstractRowConverter<SourceT, LookupT, SinkT, T> implement
                 baseColumn =
                         new StringColumn(
                                 String.valueOf(
-                                        DateUtil.columnToDate(fieldConf.getValue(), parseDateFormat)
-                                                .getTime()),
+                                        DateUtil.columnToDate(fieldConf.getValue(), parseDateFormat).getTime()),
                                 format);
             } else {
                 baseColumn = new StringColumn(fieldConf.getValue(), format);

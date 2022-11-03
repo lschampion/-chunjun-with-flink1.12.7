@@ -107,7 +107,6 @@ public class JdbcColumnConverter
             AbstractBaseColumn baseColumn = null;
             if (StringUtils.isBlank(fieldConf.getValue())) {
                 Object field = resultSet.getObject(converterIndex + 1);
-
                 baseColumn =
                         (AbstractBaseColumn)
                                 toInternalConverters.get(converterIndex).deserialize(field);

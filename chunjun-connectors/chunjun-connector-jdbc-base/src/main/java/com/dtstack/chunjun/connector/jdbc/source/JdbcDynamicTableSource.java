@@ -56,6 +56,8 @@ import java.util.stream.Collectors;
 public class JdbcDynamicTableSource
         implements ScanTableSource, LookupTableSource, SupportsProjectionPushDown {
 
+    // ScanTableSource 用的最多的常规TableSource，它会持续、完整读取源表，形成flink中的核心数据抽象—“数据流";
+    // LookupTableSource 不对源表持续、完整读取，而是在需要的时候，才根据一个(或多个)查询key，去临时性地查询源表得到一条（或多条）数据;
     protected final JdbcConf jdbcConf;
     protected final LookupConf lookupConf;
     protected final String dialectName;

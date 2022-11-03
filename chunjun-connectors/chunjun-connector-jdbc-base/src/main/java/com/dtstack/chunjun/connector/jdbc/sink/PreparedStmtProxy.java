@@ -116,7 +116,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
                 getPstmtCacheKey(jdbcConf.getSchema(), jdbcConf.getTable(), RowKind.INSERT),
                 DynamicPreparedStmt.buildStmt(
                         jdbcDialect,
-                        jdbcConf.getColumn(),
+                        jdbcConf.getColumn(),  // List<FieldConf>
                         currentRowConverter,
                         currentFieldNamedPstmt));
     }
@@ -209,6 +209,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
         CacheBuilder<String, DynamicPreparedStmt> cacheBuilder =
                 CacheBuilder.newBuilder()
                         .maximumSize(cacheSize)
+                        // 当要移除stmt的的时候尝试关闭他。
                         .removalListener(
                                 notification -> {
                                     try {

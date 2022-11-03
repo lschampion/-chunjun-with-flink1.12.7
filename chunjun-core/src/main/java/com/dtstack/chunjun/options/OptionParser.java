@@ -50,6 +50,7 @@ public class OptionParser {
     private final Options properties = new Options();
 
     public OptionParser(String[] args) throws Exception {
+        // 利用org.apache.commons.cli.Options工具类：实现参数错误的时候返回相应的提示信息！
         Class cla = properties.getClass();
         Field[] fields = cla.getDeclaredFields();
         for (Field field : fields) {

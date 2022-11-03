@@ -34,7 +34,7 @@ public class MonitorConf implements Serializable {
 
     private Properties properties;
 
-    public String getType() {
+    public String  getType() {
         return type;
     }
 

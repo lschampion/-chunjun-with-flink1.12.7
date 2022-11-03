@@ -1,0 +1,77 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "parameter": {
+            "host": "localhost",
+            "port": 3306,
+            "serverId": 1,
+            "databaseList": [
+              "test"
+            ],
+            "tableList": [
+              "test.student"
+            ],
+            "username": "root",
+            "password": "123456",
+            "column": [
+              {
+                "name": "s_id",
+                "type": "bigint"
+              },
+              {
+                "name": "s_name",
+                "type": "string"
+              },
+              {
+                "name": "s_sex",
+                "type": "string"
+              }
+            ]
+          },
+          "table": {
+            "tableName": "student"
+          },
+          "name": "mysqlcdcreader"
+        },
+        "writer": {
+          "parameter": {
+            "column": [
+              {
+                "name": "s_id",
+                "type": "bigint"
+              },
+              {
+                "name": "s_name",
+                "type": "string"
+              },
+              {
+                "name": "s_sex",
+                "type": "string"
+              }
+            ],"print": true
+          },
+          "table": {
+            "tableName": "sinkTable"
+          },
+          "name": "streamwriter"
+        },
+        "transformer": {
+          "transformSql": ""
+        }
+      }
+    ],
+    "setting": {
+      "errorLimit": {
+        "record": 100
+      },
+      "speed": {
+        "bytes": 0,
+        "channel": 1,
+        "readerChannel": 1,
+        "writerChannel": 1
+      }
+    }
+  }
+}
