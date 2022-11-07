@@ -21,7 +21,7 @@
 package com.dtstack.chunjun.connector.vertica11.converter;
 
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcRowConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 import com.dtstack.chunjun.util.DateUtil;
@@ -112,7 +112,7 @@ public class Vertica11RowConverter extends JdbcRowConverter {
                 return (IDeserializationConverter<BigDecimal, DecimalData>)
                         val -> DecimalData.fromBigDecimal(val, val.precision(), val.scale());
             case DATE:
-                return (IDeserializationConverter<String, Integer>)
+                return (IDeserializationConverter<java.lang.String, Integer>)
                         val ->
                                 (int)
                                         DateUtil.getTimestampFromStr(val)
@@ -120,10 +120,10 @@ public class Vertica11RowConverter extends JdbcRowConverter {
                                                 .toLocalDate()
                                                 .toEpochDay();
             case TIME_WITHOUT_TIME_ZONE:
-                return (IDeserializationConverter<String, Integer>)
+                return (IDeserializationConverter<java.lang.String, Integer>)
                         val ->
                                 (int)
-                                        ((Time.valueOf(String.valueOf(val)))
+                                        ((Time.valueOf(java.lang.String.valueOf(val)))
                                                         .toLocalTime()
                                                         .toNanoOfDay()
                                                 / 1_000_000L);
@@ -131,9 +131,9 @@ public class Vertica11RowConverter extends JdbcRowConverter {
             case TIMESTAMP_WITHOUT_TIME_ZONE:
                 return val -> TimestampData.fromTimestamp((Timestamp) val);
             case CHAR:
-                return (IDeserializationConverter<String, String>) val -> val;
+                return (IDeserializationConverter<java.lang.String, java.lang.String>) val -> val;
             case VARCHAR:
-                return (IDeserializationConverter<String, StringData>)
+                return (IDeserializationConverter<java.lang.String, StringData>)
                         val -> StringData.fromString(val);
             case BINARY:
                 return (IDeserializationConverter<byte[], byte[]>) val -> val;
@@ -156,7 +156,7 @@ public class Vertica11RowConverter extends JdbcRowConverter {
      * @return
      */
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:

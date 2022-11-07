@@ -20,7 +20,7 @@ package com.dtstack.chunjun.connector.oracle.converter;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 import com.dtstack.chunjun.element.ColumnRowData;
@@ -80,7 +80,7 @@ public class OracleColumnConverter extends JdbcColumnConverter {
                         return new StringColumn(ConvertUtil.convertClob(clob));
                     };
                 }
-                return val -> new StringColumn((String) val);
+                return val -> new StringColumn((java.lang.String) val);
             case DATE:
                 return val -> new TimestampColumn((Timestamp) val, 0);
             case TIMESTAMP_WITH_TIME_ZONE:
@@ -103,7 +103,7 @@ public class OracleColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement>
+    protected ISerializationConverter<String>
             wrapIntoNullableExternalConverter(
                     ISerializationConverter serializationConverter, LogicalType type) {
         return (val, index, statement) -> {
@@ -124,7 +124,7 @@ public class OracleColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:

@@ -23,7 +23,7 @@ import com.dtstack.chunjun.connector.jdbc.adapter.ConnectionAdapter;
 import com.dtstack.chunjun.connector.jdbc.conf.ConnectionConf;
 import com.dtstack.chunjun.connector.jdbc.conf.JdbcConf;
 import com.dtstack.chunjun.connector.jdbc.exclusion.FieldNameExclusionStrategy;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.util.GsonUtil;
 import com.dtstack.chunjun.util.TableUtil;
 
@@ -52,7 +52,7 @@ public class JdbcColumnConverterTest {
 
     @BeforeClass
     public static void setup() throws IOException {
-        String json = readFile("sync_test.json");
+        java.lang.String json = readFile("sync_test.json");
         SyncConf syncConf = SyncConf.parseJob(json);
         Gson gson =
                 new GsonBuilder()
@@ -88,7 +88,7 @@ public class JdbcColumnConverterTest {
         when(resultSet.getObject(12)).thenReturn(Timestamp.valueOf("2022-01-01 00:00:00"));
         RowData rowData = converter.toInternal(resultSet);
 
-        FieldNamedPreparedStatement statement = mock(FieldNamedPreparedStatement.class);
+        String statement = mock(String.class);
         converter.toExternal(rowData, statement);
     }
 }

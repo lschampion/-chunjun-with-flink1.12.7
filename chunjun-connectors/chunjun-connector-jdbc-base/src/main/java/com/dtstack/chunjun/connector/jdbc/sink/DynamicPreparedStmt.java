@@ -20,8 +20,8 @@ package com.dtstack.chunjun.connector.jdbc.sink;
 import com.dtstack.chunjun.conf.FieldConf;
 import com.dtstack.chunjun.connector.jdbc.conf.JdbcConf;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatementImpl;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
+import com.dtstack.chunjun.connector.jdbc.statement.StringImpl;
 import com.dtstack.chunjun.connector.jdbc.util.JdbcUtil;
 import com.dtstack.chunjun.converter.AbstractRowConverter;
 import com.dtstack.chunjun.util.TableUtil;
@@ -53,21 +53,21 @@ public class DynamicPreparedStmt {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynamicPreparedStmt.class);
 
-    protected List<String> columnNameList = new ArrayList<>();
+    protected List<java.lang.String> columnNameList = new ArrayList<>();
 
-    protected List<String> columnTypeList = new ArrayList<>();
+    protected List<java.lang.String> columnTypeList = new ArrayList<>();
 
-    protected transient FieldNamedPreparedStatement fieldNamedPreparedStatement;
+    protected transient String string;
     protected JdbcConf jdbcConf;
     private boolean writeExtInfo;
     private JdbcDialect jdbcDialect;
     private AbstractRowConverter<?, ?, ?, ?> rowConverter;
 
     public static DynamicPreparedStmt buildStmt(
-            Map<String, Integer> header,
-            Set<String> extHeader,
-            String schemaName,
-            String tableName,
+            Map<java.lang.String, Integer> header,
+            Set<java.lang.String> extHeader,
+            java.lang.String schemaName,
+            java.lang.String tableName,
             RowKind rowKind,
             Connection connection,
             JdbcDialect jdbcDialect,
@@ -81,17 +81,17 @@ public class DynamicPreparedStmt {
         dynamicPreparedStmt.getColumnMeta(schemaName, tableName, connection);
         dynamicPreparedStmt.buildRowConvert();
 
-        String sql = dynamicPreparedStmt.prepareTemplates(rowKind, schemaName, tableName);
-        String[] fieldNames = new String[dynamicPreparedStmt.columnNameList.size()];
+        java.lang.String sql = dynamicPreparedStmt.prepareTemplates(rowKind, schemaName, tableName);
+        java.lang.String[] fieldNames = new java.lang.String[dynamicPreparedStmt.columnNameList.size()];
         dynamicPreparedStmt.columnNameList.toArray(fieldNames);
-        dynamicPreparedStmt.fieldNamedPreparedStatement =
-                FieldNamedPreparedStatementImpl.prepareStatement(connection, sql, fieldNames);
+        dynamicPreparedStmt.string =
+                StringImpl.prepareStatement(connection, sql, fieldNames);
         return dynamicPreparedStmt;
     }
 
     public static DynamicPreparedStmt buildStmt(
-            String schemaName,
-            String tableName,
+            java.lang.String schemaName,
+            java.lang.String tableName,
             RowKind rowKind,
             Connection connection,
             JdbcDialect jdbcDialect,
@@ -101,16 +101,16 @@ public class DynamicPreparedStmt {
         DynamicPreparedStmt dynamicPreparedStmt = new DynamicPreparedStmt();
         dynamicPreparedStmt.jdbcDialect = jdbcDialect;
         dynamicPreparedStmt.rowConverter = rowConverter;
-        String[] fieldNames = new String[fieldConfList.size()];
+        java.lang.String[] fieldNames = new java.lang.String[fieldConfList.size()];
         for (int i = 0; i < fieldConfList.size(); i++) {
             FieldConf fieldConf = fieldConfList.get(i);
             fieldNames[i] = fieldConf.getName();
             dynamicPreparedStmt.columnNameList.add(fieldConf.getName());
             dynamicPreparedStmt.columnTypeList.add(fieldConf.getType());
         }
-        String sql = dynamicPreparedStmt.prepareTemplates(rowKind, schemaName, tableName);
-        dynamicPreparedStmt.fieldNamedPreparedStatement =
-                FieldNamedPreparedStatementImpl.prepareStatement(connection, sql, fieldNames);
+        java.lang.String sql = dynamicPreparedStmt.prepareTemplates(rowKind, schemaName, tableName);
+        dynamicPreparedStmt.string =
+                StringImpl.prepareStatement(connection, sql, fieldNames);
         return dynamicPreparedStmt;
     }
 
@@ -118,11 +118,11 @@ public class DynamicPreparedStmt {
             JdbcDialect jdbcDialect,
             List<FieldConf> fieldConfList,
             AbstractRowConverter<?, ?, ?, ?> rowConverter,
-            FieldNamedPreparedStatement fieldNamedPreparedStatement) {
+            String string) {
         DynamicPreparedStmt dynamicPreparedStmt = new DynamicPreparedStmt();
         dynamicPreparedStmt.jdbcDialect = jdbcDialect;
         dynamicPreparedStmt.rowConverter = rowConverter;
-        dynamicPreparedStmt.fieldNamedPreparedStatement = fieldNamedPreparedStatement;
+        dynamicPreparedStmt.string = string;
         for (int i = 0; i < fieldConfList.size(); i++) {
             FieldConf fieldConf = fieldConfList.get(i);
             dynamicPreparedStmt.columnNameList.add(fieldConf.getName());
@@ -131,18 +131,18 @@ public class DynamicPreparedStmt {
         return dynamicPreparedStmt;
     }
 
-    protected String prepareTemplates(RowKind rowKind, String schemaName, String tableName) {
-        String singleSql = null;
+    protected java.lang.String prepareTemplates(RowKind rowKind, java.lang.String schemaName, java.lang.String tableName) {
+        java.lang.String singleSql = null;
         switch (rowKind) {
             case INSERT:
             case UPDATE_AFTER:
                 singleSql =
                         jdbcDialect.getInsertIntoStatement(
-                                schemaName, tableName, columnNameList.toArray(new String[0]));
+                                schemaName, tableName, columnNameList.toArray(new java.lang.String[0]));
                 break;
             case DELETE:
             case UPDATE_BEFORE:
-                String[] columnNames = new String[columnNameList.size()];
+                java.lang.String[] columnNames = new java.lang.String[columnNameList.size()];
                 columnNameList.toArray(columnNames);
                 singleSql = jdbcDialect.getDeleteStatement(schemaName, tableName, columnNames);
                 break;
@@ -154,7 +154,7 @@ public class DynamicPreparedStmt {
         return singleSql;
     }
 
-    public void getColumnNameList(Map<String, Integer> header, Set<String> extHeader) {
+    public void getColumnNameList(Map<java.lang.String, Integer> header, Set<java.lang.String> extHeader) {
         if (writeExtInfo) {
             columnNameList.addAll(header.keySet());
         } else {
@@ -171,32 +171,32 @@ public class DynamicPreparedStmt {
         rowConverter = jdbcDialect.getColumnConverter(rowType, jdbcConf);
     }
 
-    public void getColumnMeta(String schema, String table, Connection dbConn) {
-        Pair<List<String>, List<String>> listListPair =
+    public void getColumnMeta(java.lang.String schema, java.lang.String table, Connection dbConn) {
+        Pair<List<java.lang.String>, List<java.lang.String>> listListPair =
                 JdbcUtil.getTableMetaData(null, schema, table, dbConn);
-        List<String> nameList = listListPair.getLeft();
-        List<String> typeList = listListPair.getRight();
-        for (String columnName : columnNameList) {
+        List<java.lang.String> nameList = listListPair.getLeft();
+        List<java.lang.String> typeList = listListPair.getRight();
+        for (java.lang.String columnName : columnNameList) {
             int index = nameList.indexOf(columnName);
             columnTypeList.add(typeList.get(index));
         }
     }
 
     public void reOpenStatement(Connection connection) throws SQLException {
-        this.fieldNamedPreparedStatement.reOpen(connection);
+        this.string.reOpen(connection);
     }
 
     public void close() throws SQLException {
-        fieldNamedPreparedStatement.close();
+        string.close();
     }
 
-    public FieldNamedPreparedStatement getFieldNamedPreparedStatement() {
-        return fieldNamedPreparedStatement;
+    public String getFieldNamedPreparedStatement() {
+        return string;
     }
 
     public void setFieldNamedPreparedStatement(
-            FieldNamedPreparedStatement fieldNamedPreparedStatement) {
-        this.fieldNamedPreparedStatement = fieldNamedPreparedStatement;
+            String string) {
+        this.string = string;
     }
 
     public AbstractRowConverter getRowConverter() {

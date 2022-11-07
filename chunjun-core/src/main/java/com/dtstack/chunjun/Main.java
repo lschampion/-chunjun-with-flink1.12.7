@@ -245,6 +245,7 @@ public class Main {
             StreamTableEnvironment tableEnv,
             SyncConf config,
             DataStream<RowData> sourceDataStream) {
+        // TODO: lisai 此处使用 * 代替是有问题的！！！
         String fieldNames =
                 String.join(ConstantValue.COMMA_SYMBOL, config.getReader().getFieldNameList());
         List<Expression> expressionList = ExpressionParser.parseExpressionList(fieldNames);

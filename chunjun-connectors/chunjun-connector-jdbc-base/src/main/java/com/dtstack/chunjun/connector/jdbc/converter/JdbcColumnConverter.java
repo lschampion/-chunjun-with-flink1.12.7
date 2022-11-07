@@ -20,7 +20,7 @@ package com.dtstack.chunjun.connector.jdbc.converter;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.conf.FieldConf;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.constants.ConstantValue;
 import com.dtstack.chunjun.converter.AbstractRowConverter;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
@@ -51,10 +51,16 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
-/** Base class for all converters that convert between JDBC object and Flink internal object. */
+/**
+ * Base class for all converters that convert between JDBC object and Flink internal object.
+ * AbstractRowConverter<SourceT, LookupT, SinkT, T>
+ *
+ *
+ */
+
 public class JdbcColumnConverter
         extends AbstractRowConverter<
-                ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType> {
+                ResultSet, JsonArray, String, LogicalType> {
 
     public JdbcColumnConverter(RowType rowType) {
         this(rowType, null);
@@ -73,7 +79,7 @@ public class JdbcColumnConverter
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement>
+    protected ISerializationConverter<String>
             wrapIntoNullableExternalConverter(
                     ISerializationConverter serializationConverter, LogicalType type) {
         return (val, index, statement) -> {
@@ -118,8 +124,8 @@ public class JdbcColumnConverter
     }
 
     @Override
-    public FieldNamedPreparedStatement toExternal(
-            RowData rowData, FieldNamedPreparedStatement statement) throws Exception {
+    public String toExternal(
+            RowData rowData, String statement) throws Exception {
         for (int index = 0; index < rowData.getArity(); index++) {
             toExternalConverters.get(index).serialize(rowData, index, statement);
         }
@@ -150,7 +156,7 @@ public class JdbcColumnConverter
                             switch (yearMonthIntervalType.getResolution()) {
                                 case YEAR:
                                     return new BigDecimalColumn(
-                                            Integer.parseInt(String.valueOf(val).substring(0, 4)));
+                                            Integer.parseInt(java.lang.String.valueOf(val).substring(0, 4)));
                                 case MONTH:
                                 case YEAR_TO_MONTH:
                                 default:
@@ -189,7 +195,7 @@ public class JdbcColumnConverter
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:

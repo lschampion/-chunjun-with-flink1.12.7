@@ -20,7 +20,7 @@ package com.dtstack.chunjun.connector.saphana.converter;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 import com.dtstack.chunjun.element.AbstractBaseColumn;
@@ -78,7 +78,7 @@ public class SaphanaColumnConverter extends JdbcColumnConverter {
                         HanaClob clob = (HanaClob) val;
                         try (BufferedReader bf = new BufferedReader(clob.getCharacterStream())) {
                             StringBuilder stringBuilder = new StringBuilder();
-                            String next, line = bf.readLine();
+                            java.lang.String next, line = bf.readLine();
                             for (boolean last = (line == null); !last; line = next) {
                                 last = ((next = bf.readLine()) == null);
                                 if (last) {
@@ -90,7 +90,7 @@ public class SaphanaColumnConverter extends JdbcColumnConverter {
                             return new StringColumn(stringBuilder.toString());
                         }
                     } else {
-                        return new StringColumn((String) val);
+                        return new StringColumn((java.lang.String) val);
                     }
                 };
             case DATE:
@@ -113,7 +113,7 @@ public class SaphanaColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:

@@ -22,7 +22,7 @@ import com.dtstack.chunjun.connector.jdbc.conf.JdbcConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcRawTypeConverterTest;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.connector.jdbc.util.JdbcUtil;
 import com.dtstack.chunjun.connector.jdbc.util.SqlUtil;
 import com.dtstack.chunjun.element.ColumnRowData;
@@ -76,7 +76,7 @@ import static org.powermock.reflect.Whitebox.setInternalState;
     TableUtil.class,
     JdbcUtil.class,
     PreparedStmtProxy.class,
-    FieldNamedPreparedStatement.class,
+    String.class,
     LongCounter.class
 })
 public class JdbcOutputFormatTest {
@@ -99,7 +99,7 @@ public class JdbcOutputFormatTest {
         mockStatic(SqlUtil.class);
         mockStatic(JdbcUtil.class);
         mockStatic(TableUtil.class);
-        mockStatic(FieldNamedPreparedStatement.class);
+        mockStatic(String.class);
 
         jdbcOutputFormat = mock(JdbcOutputFormat.class);
         jdbcDialect = mock(JdbcDialect.class);
@@ -228,7 +228,7 @@ public class JdbcOutputFormatTest {
 
     @Test
     public void executeBatchTest() throws SQLException {
-        List<String> sqlList = new ArrayList<>();
+        List<java.lang.String> sqlList = new ArrayList<>();
         sqlList.add("truncate table test_sink");
         sqlList.add("truncate table test_sink");
         doCallRealMethod().when(jdbcOutputFormat).executeBatch(sqlList);
@@ -247,12 +247,12 @@ public class JdbcOutputFormatTest {
         when(jdbcConf.getSchema()).thenReturn("test_schema");
         when(jdbcConf.getTable()).thenReturn("test_sink");
 
-        List<String> columnNameList = new ArrayList<>();
+        List<java.lang.String> columnNameList = new ArrayList<>();
         columnNameList.add("id");
         columnNameList.add("name");
         setInternalState(jdbcOutputFormat, "columnNameList", columnNameList);
 
-        String expect;
+        java.lang.String expect;
         // insert
         when(jdbcConf.getMode()).thenReturn(EWriteMode.INSERT.name());
         when(jdbcDialect.getInsertIntoStatement(any(), any(), any())).thenCallRealMethod();

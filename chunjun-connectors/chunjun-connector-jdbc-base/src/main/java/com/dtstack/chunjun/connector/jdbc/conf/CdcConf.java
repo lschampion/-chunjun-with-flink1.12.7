@@ -25,17 +25,18 @@ import java.util.List;
 
 public class CdcConf extends ChunJunCommonConf implements Serializable {
     private static final long serialVersionUID = 1L;
-
     protected String host;
     protected int port;
-    protected List<String> databaseList;
+    protected String database;
+    protected List<String> schemaList;
     protected List<String> tableList;
-
     protected String username;
-
     protected String password;
-
     protected int serverId;
+    public String getDatabase() {
+        return database;
+    }
+    protected List<SourceConnectionConf> connection;
 
     public String getHost() {
         return host;
@@ -53,12 +54,12 @@ public class CdcConf extends ChunJunCommonConf implements Serializable {
         this.port = port;
     }
 
-    public List<String> getDatabaseList() {
-        return databaseList;
+    public List<String> getSchemaList() {
+        return schemaList;
     }
 
-    public void setDatabaseList(List<String> databaseList) {
-        this.databaseList = databaseList;
+    public void setSchemaList(List<String> schemaList) {
+        this.schemaList = schemaList;
     }
 
     public List<String> getTableList() {
@@ -71,6 +72,10 @@ public class CdcConf extends ChunJunCommonConf implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public List<SourceConnectionConf> getConnection() {
+        return this.connection;
     }
 
     public void setUsername(String username) {

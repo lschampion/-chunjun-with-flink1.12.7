@@ -36,22 +36,22 @@ import java.util.Map;
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
-/** Simple implementation of {@link FieldNamedPreparedStatement}. */
-public class FieldNamedPreparedStatementImpl implements FieldNamedPreparedStatement {
+/** Simple implementation of {@link String}. */
+public class StringImpl implements String {
 
     private PreparedStatement statement;
-    private final String parsedSQL;
+    private final java.lang.String parsedSQL;
     private final int[][] indexMapping;
 
-    private FieldNamedPreparedStatementImpl(
-            PreparedStatement statement, String parsedSQL, int[][] indexMapping) {
+    private StringImpl(
+            PreparedStatement statement, java.lang.String parsedSQL, int[][] indexMapping) {
         this.statement = statement;
         this.parsedSQL = parsedSQL;
         this.indexMapping = indexMapping;
     }
 
-    public static FieldNamedPreparedStatement prepareStatement(
-            Connection connection, String sql, String[] fieldNames) throws SQLException {
+    public static String prepareStatement(
+            Connection connection, java.lang.String sql, java.lang.String[] fieldNames) throws SQLException {
         checkNotNull(connection, "connection must not be null.");
         checkNotNull(sql, "sql must not be null.");
         checkNotNull(fieldNames, "fieldNames must not be null.");
@@ -60,20 +60,20 @@ public class FieldNamedPreparedStatementImpl implements FieldNamedPreparedStatem
             throw new IllegalArgumentException("SQL statement must not contain ? character.");
         }
 
-        HashMap<String, List<Integer>> parameterMap = new HashMap<>();
-        String parsedSQL = parseNamedStatement(sql, parameterMap);
+        HashMap<java.lang.String, List<Integer>> parameterMap = new HashMap<>();
+        java.lang.String parsedSQL = parseNamedStatement(sql, parameterMap);
         // currently, the statements must contain all the field parameters
         checkArgument(parameterMap.size() == fieldNames.length);
         int[][] indexMapping = new int[fieldNames.length][];
         for (int i = 0; i < fieldNames.length; i++) {
-            String fieldName = fieldNames[i];
+            java.lang.String fieldName = fieldNames[i];
             checkArgument(
                     parameterMap.containsKey(fieldName),
                     fieldName + " doesn't exist in the parameters of SQL statement: " + sql);
             indexMapping[i] = parameterMap.get(fieldName).stream().mapToInt(v -> v).toArray();
         }
 
-        return new FieldNamedPreparedStatementImpl(
+        return new StringImpl(
                 connection.prepareStatement(parsedSQL), parsedSQL, indexMapping);
     }
 
@@ -85,7 +85,7 @@ public class FieldNamedPreparedStatementImpl implements FieldNamedPreparedStatem
      * @param paramMap map to hold parameter-index mappings
      * @return the parsed sql
      */
-    public static String parseNamedStatement(String sql, Map<String, List<Integer>> paramMap) {
+    public static java.lang.String parseNamedStatement(java.lang.String sql, Map<java.lang.String, List<Integer>> paramMap) {
         StringBuilder parsedSql = new StringBuilder();
         int fieldIndex = 1; // SQL statement parameter index starts from 1
         int length = sql.length();
@@ -96,7 +96,7 @@ public class FieldNamedPreparedStatementImpl implements FieldNamedPreparedStatem
                 while (j < length && Character.isJavaIdentifierPart(sql.charAt(j))) {
                     j++;
                 }
-                String parameterName = sql.substring(i + 1, j);
+                java.lang.String parameterName = sql.substring(i + 1, j);
                 checkArgument(
                         !parameterName.isEmpty(),
                         "Named parameters in SQL statement must not be empty.");
@@ -205,7 +205,7 @@ public class FieldNamedPreparedStatementImpl implements FieldNamedPreparedStatem
     }
 
     @Override
-    public void setString(int fieldIndex, String x) throws SQLException {
+    public void setString(int fieldIndex, java.lang.String x) throws SQLException {
         for (int index : indexMapping[fieldIndex]) {
             statement.setString(index, x);
         }

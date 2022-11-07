@@ -19,7 +19,7 @@
 package com.dtstack.chunjun.connector.saphana.converter;
 
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcRowConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 
@@ -80,11 +80,11 @@ public class SaphanaRowConverter extends JdbcRowConverter {
                                 : DecimalData.fromBigDecimal((BigDecimal) val, precision, scale);
             case DATE:
                 return val ->
-                        (int) ((Date.valueOf(String.valueOf(val))).toLocalDate().toEpochDay());
+                        (int) ((Date.valueOf(java.lang.String.valueOf(val))).toLocalDate().toEpochDay());
             case TIME_WITHOUT_TIME_ZONE:
                 return val ->
                         (int)
-                                ((Time.valueOf(String.valueOf(val))).toLocalTime().toNanoOfDay()
+                                ((Time.valueOf(java.lang.String.valueOf(val))).toLocalTime().toNanoOfDay()
                                         / 1_000_000L);
             case TIMESTAMP_WITH_TIME_ZONE:
             case TIMESTAMP_WITHOUT_TIME_ZONE:
@@ -106,7 +106,7 @@ public class SaphanaRowConverter extends JdbcRowConverter {
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:

@@ -19,7 +19,7 @@ package com.dtstack.chunjun.connector.jdbc.sink;
 
 import com.dtstack.chunjun.connector.jdbc.conf.JdbcConf;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.constants.CDCConstantValue;
 import com.dtstack.chunjun.converter.AbstractRowConverter;
 import com.dtstack.chunjun.element.ColumnRowData;
@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
  * @author xuchao
  * @date 2021-12-20
  */
-public class PreparedStmtProxy implements FieldNamedPreparedStatement {
+public class PreparedStmtProxy implements String {
 
     private static final Logger LOG = LoggerFactory.getLogger(PreparedStmtProxy.class);
 
@@ -72,18 +72,18 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
     private final int cacheDurationMin = 10;
 
     /** LUR cache key info: database_table_rowkind * */
-    protected Cache<String, DynamicPreparedStmt> pstmtCache;
+    protected Cache<java.lang.String, DynamicPreparedStmt> pstmtCache;
 
     protected boolean cacheIsExpire = false;
 
     /** 当前的执行sql的preparestatement */
-    protected transient FieldNamedPreparedStatement currentFieldNamedPstmt;
+    protected transient String currentFieldNamedPstmt;
 
     /** 当前执行sql的数据类型转换器 */
     protected AbstractRowConverter currentRowConverter;
 
     /** 当调用writeMultipleRecords 可能会涉及到多个pstmt */
-    private final Set<FieldNamedPreparedStatement> unExecutePstmt = new LinkedHashSet<>();
+    private final Set<String> unExecutePstmt = new LinkedHashSet<>();
 
     protected Connection connection;
     protected JdbcDialect jdbcDialect;
@@ -101,7 +101,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
     }
 
     public PreparedStmtProxy(
-            FieldNamedPreparedStatement currentFieldNamedPstmt,
+            String currentFieldNamedPstmt,
             AbstractRowConverter currentRowConverter,
             Connection connection,
             JdbcConf jdbcConf,
@@ -132,23 +132,23 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
         }
 
         currentFieldNamedPstmt =
-                (FieldNamedPreparedStatement)
+                (String)
                         currentRowConverter.toExternal(row, this.currentFieldNamedPstmt);
     }
 
     public void getOrCreateFieldNamedPstmt(RowData row) throws ExecutionException {
         if (row instanceof ColumnRowData) {
             ColumnRowData columnRowData = (ColumnRowData) row;
-            Map<String, Integer> head = columnRowData.getHeaderInfo();
+            Map<java.lang.String, Integer> head = columnRowData.getHeaderInfo();
             if (MapUtils.isEmpty(head)) {
                 return;
             }
             int dataBaseIndex = head.get(CDCConstantValue.SCHEMA);
             int tableIndex = head.get(CDCConstantValue.TABLE);
 
-            String database = row.getString(dataBaseIndex).toString();
-            String tableName = row.getString(tableIndex).toString();
-            String key = getPstmtCacheKey(database, tableName, row.getRowKind());
+            java.lang.String database = row.getString(dataBaseIndex).toString();
+            java.lang.String tableName = row.getString(tableIndex).toString();
+            java.lang.String key = getPstmtCacheKey(database, tableName, row.getRowKind());
 
             DynamicPreparedStmt fieldNamedPreparedStatement =
                     pstmtCache.get(
@@ -173,7 +173,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
             currentFieldNamedPstmt = fieldNamedPreparedStatement.getFieldNamedPreparedStatement();
             currentRowConverter = fieldNamedPreparedStatement.getRowConverter();
         } else {
-            String key =
+            java.lang.String key =
                     getPstmtCacheKey(jdbcConf.getSchema(), jdbcConf.getTable(), row.getRowKind());
             DynamicPreparedStmt fieldNamedPreparedStatement =
                     pstmtCache.get(
@@ -200,13 +200,13 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
     public void writeSingleRecordInternal(RowData row) throws Exception {
         getOrCreateFieldNamedPstmt(row);
         currentFieldNamedPstmt =
-                (FieldNamedPreparedStatement)
+                (String)
                         currentRowConverter.toExternal(row, this.currentFieldNamedPstmt);
         currentFieldNamedPstmt.execute();
     }
 
     protected void initCache(boolean isExpired) {
-        CacheBuilder<String, DynamicPreparedStmt> cacheBuilder =
+        CacheBuilder<java.lang.String, DynamicPreparedStmt> cacheBuilder =
                 CacheBuilder.newBuilder()
                         .maximumSize(cacheSize)
                         // 当要移除stmt的的时候尝试关闭他。
@@ -225,8 +225,8 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
         this.pstmtCache = cacheBuilder.build();
     }
 
-    public String getPstmtCacheKey(String schema, String table, RowKind rowKind) {
-        return String.format("%s_%s_%s", schema, table, rowKind);
+    public java.lang.String getPstmtCacheKey(java.lang.String schema, java.lang.String table, RowKind rowKind) {
+        return java.lang.String.format("%s_%s_%s", schema, table, rowKind);
     }
 
     @Override
@@ -248,7 +248,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
     @Override
     public int[] executeBatch() throws SQLException {
         List<Integer> exeResult = new ArrayList<>();
-        for (FieldNamedPreparedStatement pstmt : unExecutePstmt) {
+        for (String pstmt : unExecutePstmt) {
             int[] resultArray = pstmt.executeBatch();
             Arrays.stream(resultArray).forEach(exeResult::add);
         }
@@ -262,7 +262,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
 
     @Override
     public void clearBatch() throws SQLException {
-        for (FieldNamedPreparedStatement pstmt : unExecutePstmt) {
+        for (String pstmt : unExecutePstmt) {
             pstmt.clearBatch();
         }
         unExecutePstmt.clear();
@@ -319,7 +319,7 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
     }
 
     @Override
-    public void setString(int fieldIndex, String x) throws SQLException {
+    public void setString(int fieldIndex, java.lang.String x) throws SQLException {
         currentFieldNamedPstmt.setString(fieldIndex, x);
     }
 
@@ -371,10 +371,10 @@ public class PreparedStmtProxy implements FieldNamedPreparedStatement {
     @Override
     public void reOpen(Connection connection) throws SQLException {
         this.connection = connection;
-        ConcurrentMap<String, DynamicPreparedStmt> stringDynamicPreparedStmtConcurrentMap =
+        ConcurrentMap<java.lang.String, DynamicPreparedStmt> stringDynamicPreparedStmtConcurrentMap =
                 pstmtCache.asMap();
         initCache(cacheIsExpire);
-        for (Map.Entry<String, DynamicPreparedStmt> entry :
+        for (Map.Entry<java.lang.String, DynamicPreparedStmt> entry :
                 stringDynamicPreparedStmtConcurrentMap.entrySet()) {
             DynamicPreparedStmt value = entry.getValue();
             value.reOpenStatement(connection);

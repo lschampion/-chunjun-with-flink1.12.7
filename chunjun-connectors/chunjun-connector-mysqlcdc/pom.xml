@@ -32,7 +32,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.ververica</groupId>
+			<groupId>com.alibaba.ververica</groupId>
 			<!-- add the dependency matching your database -->
 			<artifactId>flink-connector-mysql-cdc</artifactId>
 			<!-- The dependency is available only for stable releases, SNAPSHOT dependency need build by yourself. -->

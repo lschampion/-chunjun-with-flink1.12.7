@@ -21,7 +21,7 @@ package com.dtstack.chunjun.connector.sybase.dialect;
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
 import com.dtstack.chunjun.connector.jdbc.source.JdbcInputSplit;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.connector.sybase.converter.SybaseColumnConverter;
 import com.dtstack.chunjun.connector.sybase.converter.SybaseRawTypeConverter;
 import com.dtstack.chunjun.converter.AbstractRowConverter;
@@ -37,16 +37,16 @@ import java.util.Optional;
 
 /** @Author OT @Date 2022/6/16 13:54 @Version 1.0 */
 public class SybaseDialect implements JdbcDialect {
-    private static final String DIALECT_NAME = "Sybase";
-    private static final String DRIVER_NAME = "net.sourceforge.jtds.jdbc.Driver";
+    private static final java.lang.String DIALECT_NAME = "Sybase";
+    private static final java.lang.String DRIVER_NAME = "net.sourceforge.jtds.jdbc.Driver";
 
     @Override
-    public String dialectName() {
+    public java.lang.String dialectName() {
         return DIALECT_NAME;
     }
 
     @Override
-    public boolean canHandle(String url) {
+    public boolean canHandle(java.lang.String url) {
         return url.startsWith("jdbc:jtds:sybase:");
     }
 
@@ -56,24 +56,24 @@ public class SybaseDialect implements JdbcDialect {
     }
 
     @Override
-    public Optional<String> defaultDriverName() {
+    public Optional<java.lang.String> defaultDriverName() {
         return Optional.of(DRIVER_NAME);
     }
 
     @Override
-    public String quoteIdentifier(String identifier) {
+    public java.lang.String quoteIdentifier(java.lang.String identifier) {
         return "\"" + identifier + "\"";
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
         return new SybaseColumnConverter(rowType, commonConf);
     }
 
     @Override
-    public String getSplitModFilter(JdbcInputSplit split, String splitPkName) {
-        return String.format(
+    public java.lang.String getSplitModFilter(JdbcInputSplit split, java.lang.String splitPkName) {
+        return java.lang.String.format(
                 "%s %% %s = %s",
                 quoteIdentifier(splitPkName), split.getTotalNumberOfSplits(), split.getMod());
     }

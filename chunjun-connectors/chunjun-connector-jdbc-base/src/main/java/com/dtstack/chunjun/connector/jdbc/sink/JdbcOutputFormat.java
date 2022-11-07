@@ -21,7 +21,7 @@ import com.dtstack.chunjun.cdc.DdlRowData;
 import com.dtstack.chunjun.cdc.DdlRowDataConvented;
 import com.dtstack.chunjun.connector.jdbc.conf.JdbcConf;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.connector.jdbc.util.JdbcUtil;
 import com.dtstack.chunjun.element.ColumnRowData;
 import com.dtstack.chunjun.enums.EWriteMode;
@@ -88,9 +88,9 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
                 dbConn.setAutoCommit(autoCommit);
             }
             if (!EWriteMode.INSERT.name().equalsIgnoreCase(jdbcConf.getMode())) {
-                List<String> updateKey = jdbcConf.getUniqueKey();
+                List<java.lang.String> updateKey = jdbcConf.getUniqueKey();
                 if (CollectionUtils.isEmpty(updateKey)) {
-                    List<String> tableIndex =
+                    List<java.lang.String> tableIndex =
                             JdbcUtil.getTableUniqueIndex(
                                     jdbcConf.getSchema(), jdbcConf.getTable(), dbConn);
                     jdbcConf.setUniqueKey(tableIndex);
@@ -108,17 +108,17 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
     }
 
     public void buildStmtProxy() throws SQLException {
-        String tableInfo = jdbcConf.getTable();
+        java.lang.String tableInfo = jdbcConf.getTable();
 
         if ("*".equalsIgnoreCase(tableInfo)) {
             stmtProxy = new PreparedStmtProxy(dbConn, jdbcDialect, false);
         } else {
-            FieldNamedPreparedStatement fieldNamedPreparedStatement =
-                    FieldNamedPreparedStatement.prepareStatement(
-                            dbConn, prepareTemplates(), this.columnNameList.toArray(new String[0]));
+            String string =
+                    String.prepareStatement(
+                            dbConn, prepareTemplates(), this.columnNameList.toArray(new java.lang.String[0]));
             stmtProxy =
                     new PreparedStmtProxy(
-                            fieldNamedPreparedStatement,
+                            string,
                             rowConverter,
                             dbConn,
                             jdbcConf,
@@ -138,7 +138,7 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
     }
 
     @Override
-    protected String recordConvertDetailErrorMessage(int pos, Object row) {
+    protected java.lang.String recordConvertDetailErrorMessage(int pos, Object row) {
         return "\nJdbcOutputFormat ["
                 + jobName
                 + "] writeRecord error: when converting field["
@@ -252,14 +252,14 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
      *
      * @param sqlList
      */
-    protected void executeBatch(List<String> sqlList) {
+    protected void executeBatch(List<java.lang.String> sqlList) {
         if (CollectionUtils.isNotEmpty(sqlList)) {
             try (Connection conn = getConnection();
                     Statement stmt = conn.createStatement()) {
-                for (String sql : sqlList) {
+                for (java.lang.String sql : sqlList) {
                     // 兼容多条SQL写在同一行的情况
-                    String[] strings = sql.split(";");
-                    for (String s : strings) {
+                    java.lang.String[] strings = sql.split(";");
+                    for (java.lang.String s : strings) {
                         if (StringUtils.isNotBlank(s)) {
                             LOG.info("add sql to batch, sql = {}", s);
                             stmt.addBatch(s);
@@ -274,21 +274,21 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
         }
     }
 
-    protected String prepareTemplates() {
-        String singleSql;
+    protected java.lang.String prepareTemplates() {
+        java.lang.String singleSql;
         if (EWriteMode.INSERT.name().equalsIgnoreCase(jdbcConf.getMode())) {
             singleSql =
                     jdbcDialect.getInsertIntoStatement(
                             jdbcConf.getSchema(),
                             jdbcConf.getTable(),
-                            columnNameList.toArray(new String[0]));
+                            columnNameList.toArray(new java.lang.String[0]));
         } else if (EWriteMode.REPLACE.name().equalsIgnoreCase(jdbcConf.getMode())) {
             singleSql =
                     jdbcDialect
                             .getReplaceStatement(
                                     jdbcConf.getSchema(),
                                     jdbcConf.getTable(),
-                                    columnNameList.toArray(new String[0]))
+                                    columnNameList.toArray(new java.lang.String[0]))
                             .get();
         } else if (EWriteMode.UPDATE.name().equalsIgnoreCase(jdbcConf.getMode())) {
             singleSql =
@@ -296,8 +296,8 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
                             .getUpsertStatement(
                                     jdbcConf.getSchema(),
                                     jdbcConf.getTable(),
-                                    columnNameList.toArray(new String[0]),
-                                    jdbcConf.getUniqueKey().toArray(new String[0]),
+                                    columnNameList.toArray(new java.lang.String[0]),
+                                    jdbcConf.getUniqueKey().toArray(new java.lang.String[0]),
                                     jdbcConf.isAllReplace())
                             .get();
         } else {
@@ -317,7 +317,7 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
         }
 
         if (index < row.getArity()) {
-            String message = recordConvertDetailErrorMessage(index, row);
+            java.lang.String message = recordConvertDetailErrorMessage(index, row);
             throw new WriteRecordException(message, e, index, row);
         }
         throw new WriteRecordException(e.getMessage(), e);
@@ -381,11 +381,11 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
         this.jdbcDialect = jdbcDialect;
     }
 
-    public void setColumnNameList(List<String> columnNameList) {
+    public void setColumnNameList(List<java.lang.String> columnNameList) {
         this.columnNameList = columnNameList;
     }
 
-    public void setColumnTypeList(List<String> columnTypeList) {
+    public void setColumnTypeList(List<java.lang.String> columnTypeList) {
         this.columnTypeList = columnTypeList;
     }
 }

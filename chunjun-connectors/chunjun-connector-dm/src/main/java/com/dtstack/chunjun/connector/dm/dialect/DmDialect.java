@@ -23,7 +23,7 @@ import com.dtstack.chunjun.connector.dm.converter.DmColumnConverter;
 import com.dtstack.chunjun.connector.dm.converter.DmRawTypeConverter;
 import com.dtstack.chunjun.connector.dm.converter.DmRowConverter;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.AbstractRowConverter;
 import com.dtstack.chunjun.converter.RawTypeConverter;
 import com.dtstack.chunjun.throwable.ChunJunRuntimeException;
@@ -44,12 +44,12 @@ import java.util.stream.Collectors;
 public class DmDialect implements JdbcDialect {
 
     @Override
-    public String dialectName() {
+    public java.lang.String dialectName() {
         return "DM";
     }
 
     @Override
-    public boolean canHandle(String url) {
+    public boolean canHandle(java.lang.String url) {
         return url != null && url.startsWith("jdbc:dm");
     }
 
@@ -59,19 +59,19 @@ public class DmDialect implements JdbcDialect {
     }
 
     @Override
-    public Optional<String> defaultDriverName() {
+    public Optional<java.lang.String> defaultDriverName() {
         return Optional.of("dm.jdbc.driver.DmDriver");
     }
 
     @Override
-    public String quoteIdentifier(String identifier) {
+    public java.lang.String quoteIdentifier(java.lang.String identifier) {
         return "\"" + identifier + "\"";
     }
 
     /** build select sql , example: (SELECT :name "A",:name "B" FROM DUAL) */
-    public String buildDualQueryStatement(String[] column) {
+    public java.lang.String buildDualQueryStatement(java.lang.String[] column) {
         StringBuilder sb = new StringBuilder("SELECT ");
-        String collect =
+        java.lang.String collect =
                 Arrays.stream(column)
                         .map(col -> ":" + col + " " + col)
                         .collect(Collectors.joining(", "));
@@ -80,11 +80,11 @@ public class DmDialect implements JdbcDialect {
     }
 
     @Override
-    public Optional<String> getUpsertStatement(
-            String schema,
-            String tableName,
-            String[] fieldNames,
-            String[] uniqueKeyFields,
+    public Optional<java.lang.String> getUpsertStatement(
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] fieldNames,
+            java.lang.String[] uniqueKeyFields,
             boolean allReplace) {
         tableName = buildTableInfoWithSchema(schema, tableName);
         StringBuilder mergeIntoSql = new StringBuilder(64);
@@ -97,7 +97,7 @@ public class DmDialect implements JdbcDialect {
                 .append(buildEqualConditions(uniqueKeyFields))
                 .append(") ");
 
-        String updateSql = buildUpdateConnection(fieldNames, uniqueKeyFields, allReplace);
+        java.lang.String updateSql = buildUpdateConnection(fieldNames, uniqueKeyFields, allReplace);
 
         if (StringUtils.isNotEmpty(updateSql)) {
             mergeIntoSql.append(" WHEN MATCHED THEN UPDATE SET ");
@@ -122,9 +122,9 @@ public class DmDialect implements JdbcDialect {
     }
 
     /** build T1."A"=T2."A" or T1."A"=nvl(T2."A",T1."A") */
-    private String buildUpdateConnection(
-            String[] fieldNames, String[] uniqueKeyFields, boolean allReplace) {
-        List<String> uniqueKeyList = Arrays.asList(uniqueKeyFields);
+    private java.lang.String buildUpdateConnection(
+            java.lang.String[] fieldNames, java.lang.String[] uniqueKeyFields, boolean allReplace) {
+        List<java.lang.String> uniqueKeyList = Arrays.asList(uniqueKeyFields);
         return Arrays.stream(fieldNames)
                 .filter(col -> !uniqueKeyList.contains(col))
                 .map(col -> buildConnectString(allReplace, col))
@@ -135,7 +135,7 @@ public class DmDialect implements JdbcDialect {
      * Depending on parameter [allReplace] build different sql part. e.g T1."A"=T2."A" or
      * T1."A"=nvl(T2."A",T1."A")
      */
-    private String buildConnectString(boolean allReplace, String col) {
+    private java.lang.String buildConnectString(boolean allReplace, java.lang.String col) {
         return allReplace
                 ? quoteIdentifier("T1")
                         + "."
@@ -159,26 +159,26 @@ public class DmDialect implements JdbcDialect {
     }
 
     /** build sql part e.g: T1.`A` = T2.`A`, T1.`B` = T2.`B` */
-    private String buildEqualConditions(String[] uniqueKeyFields) {
+    private java.lang.String buildEqualConditions(java.lang.String[] uniqueKeyFields) {
         return Arrays.stream(uniqueKeyFields)
                 .map(col -> "T1." + quoteIdentifier(col) + " = T2." + quoteIdentifier(col))
                 .collect(Collectors.joining(", "));
     }
 
     @Override
-    public Optional<String> getReplaceStatement(
-            String schema, String tableName, String[] fieldNames) {
+    public Optional<java.lang.String> getReplaceStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames) {
         throw new ChunJunRuntimeException("dm does not support replace sql");
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getRowConverter(RowType rowType) {
         return new DmRowConverter(rowType);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
         return new DmColumnConverter(rowType, commonConf);
     }

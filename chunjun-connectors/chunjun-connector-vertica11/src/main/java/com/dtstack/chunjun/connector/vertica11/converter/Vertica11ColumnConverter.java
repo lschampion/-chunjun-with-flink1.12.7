@@ -22,7 +22,7 @@ package com.dtstack.chunjun.connector.vertica11.converter;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 import com.dtstack.chunjun.element.ColumnRowData;
@@ -74,7 +74,7 @@ public class Vertica11ColumnConverter extends JdbcColumnConverter {
                 return val -> new BigDecimalColumn((BigDecimal) val);
             case CHAR:
             case VARCHAR:
-                return val -> new StringColumn((String) val);
+                return val -> new StringColumn((java.lang.String) val);
             case DATE:
                 return val -> new SqlDateColumn((Date) val);
             case TIME_WITHOUT_TIME_ZONE:
@@ -98,7 +98,7 @@ public class Vertica11ColumnConverter extends JdbcColumnConverter {
      * @return
      */
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:

@@ -23,7 +23,7 @@ import com.dtstack.chunjun.connector.jdbc.conf.JdbcConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcRowConverter;
 import com.dtstack.chunjun.connector.jdbc.source.JdbcInputSplit;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.connector.jdbc.util.JdbcUtil;
 import com.dtstack.chunjun.connector.jdbc.util.key.DateTypeUtil;
 import com.dtstack.chunjun.connector.jdbc.util.key.KeyUtil;
@@ -62,7 +62,7 @@ public interface JdbcDialect extends Serializable {
      *
      * @return the dialect name.
      */
-    String dialectName();
+    java.lang.String dialectName();
 
     /**
      * Check if this dialect instance can handle a certain jdbc url.
@@ -70,7 +70,7 @@ public interface JdbcDialect extends Serializable {
      * @param url the jdbc url.
      * @return True if the dialect can be applied on the given jdbc url.
      */
-    boolean canHandle(String url);
+    boolean canHandle(java.lang.String url);
 
     /** get jdbc RawTypeConverter */
     RawTypeConverter getRawTypeConverter();
@@ -81,7 +81,7 @@ public interface JdbcDialect extends Serializable {
      * @param rowType the given row type
      * @return a row converter for the database
      */
-    default AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getRowConverter(RowType rowType) {
         return new JdbcRowConverter(rowType);
     }
@@ -91,7 +91,7 @@ public interface JdbcDialect extends Serializable {
      *
      * @return a row converter for the database
      */
-    default AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getColumnConverter(RowType rowType) {
         return getColumnConverter(rowType, null);
     }
@@ -101,7 +101,7 @@ public interface JdbcDialect extends Serializable {
      *
      * @return a row converter for the database
      */
-    default AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
         return new JdbcColumnConverter(rowType, commonConf);
     }
@@ -118,7 +118,7 @@ public interface JdbcDialect extends Serializable {
      * @return the default driver class name, if user not configure the driver class name, then will
      *     use this one.
      */
-    default Optional<String> defaultDriverName() {
+    default Optional<java.lang.String> defaultDriverName() {
         return Optional.empty();
     }
 
@@ -127,7 +127,7 @@ public interface JdbcDialect extends Serializable {
      * name is a reserved keyword, or in case it contains characters that require quotes (e.g.
      * space). Default using double quotes {@code "} to quote.
      */
-    default String quoteIdentifier(String identifier) {
+    default java.lang.String quoteIdentifier(java.lang.String identifier) {
         return "\"" + identifier + "\"";
     }
 
@@ -143,28 +143,28 @@ public interface JdbcDialect extends Serializable {
      * @return None if dialect does not support upsert statement, the writer will degrade to the use
      *     of select + update/insert, this performance is poor.
      */
-    default Optional<String> getUpsertStatement(
-            String schema,
-            String tableName,
-            String[] fieldNames,
-            String[] uniqueKeyFields,
+    default Optional<java.lang.String> getUpsertStatement(
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] fieldNames,
+            java.lang.String[] uniqueKeyFields,
             boolean allReplace) {
         return Optional.empty();
     }
 
-    default Optional<String> getReplaceStatement(
-            String schema, String tableName, String[] fieldNames) {
+    default Optional<java.lang.String> getReplaceStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames) {
         return Optional.empty();
     }
 
     /** 构造查询表结构的sql语句 */
-    default String getSqlQueryFields(String schema, String tableName) {
+    default java.lang.String getSqlQueryFields(java.lang.String schema, java.lang.String tableName) {
         return "SELECT * FROM " + buildTableInfoWithSchema(schema, tableName) + " LIMIT 0";
     }
 
     /** quote table. Table may like 'schema.table' or 'table' */
-    default String quoteTable(String table) {
-        String[] strings = table.split("\\.");
+    default java.lang.String quoteTable(java.lang.String table) {
+        java.lang.String[] strings = table.split("\\.");
         StringBuilder sb = new StringBuilder(64);
 
         for (int i = 0; i < strings.length; ++i) {
@@ -178,9 +178,9 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** Get row exists statement by condition fields. Default use SELECT. */
-    default String getRowExistsStatement(
-            String schema, String tableName, String[] conditionFields) {
-        String fieldExpressions =
+    default java.lang.String getRowExistsStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] conditionFields) {
+        java.lang.String fieldExpressions =
                 Arrays.stream(conditionFields)
                         .map(f -> format("%s = ?", quoteIdentifier(f)))
                         .collect(Collectors.joining(" AND "));
@@ -191,12 +191,12 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** Get insert into statement. */
-    default String getInsertIntoStatement(String schema, String tableName, String[] fieldNames) {
-        String columns =
+    default java.lang.String getInsertIntoStatement(java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames) {
+        java.lang.String columns =
                 Arrays.stream(fieldNames)
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
-        String placeholders =
+        java.lang.String placeholders =
                 Arrays.stream(fieldNames).map(f -> ":" + f).collect(Collectors.joining(", "));
         return "INSERT INTO "
                 + buildTableInfoWithSchema(schema, tableName)
@@ -212,13 +212,13 @@ public interface JdbcDialect extends Serializable {
      * Get update one row statement by condition fields, default not use limit 1, because limit 1 is
      * a sql dialect.
      */
-    default String getUpdateStatement(
-            String schema, String tableName, String[] fieldNames, String[] conditionFields) {
-        String setClause =
+    default java.lang.String getUpdateStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames, java.lang.String[] conditionFields) {
+        java.lang.String setClause =
                 Arrays.stream(fieldNames)
                         .map(f -> format("%s = ?", quoteIdentifier(f)))
                         .collect(Collectors.joining(", "));
-        String conditionClause =
+        java.lang.String conditionClause =
                 Arrays.stream(conditionFields)
                         .map(f -> format("%s = ?", quoteIdentifier(f)))
                         .collect(Collectors.joining(" AND "));
@@ -234,8 +234,8 @@ public interface JdbcDialect extends Serializable {
      * Get delete one row statement by condition fields, default not use limit 1, because limit 1 is
      * a sql dialect.
      */
-    default String getDeleteStatement(String schema, String tableName, String[] conditionFields) {
-        String conditionClause =
+    default java.lang.String getDeleteStatement(java.lang.String schema, java.lang.String tableName, java.lang.String[] conditionFields) {
+        java.lang.String conditionClause =
                 Arrays.stream(conditionFields)
                         .map(f -> format("%s = :%s", quoteIdentifier(f), f))
                         .collect(Collectors.joining(" AND "));
@@ -246,13 +246,13 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** Get select fields statement by condition fields. Default use SELECT. */
-    default String getSelectFromStatement(
-            String schema, String tableName, String[] selectFields, String[] conditionFields) {
-        String selectExpressions =
+    default java.lang.String getSelectFromStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] selectFields, java.lang.String[] conditionFields) {
+        java.lang.String selectExpressions =
                 Arrays.stream(selectFields)
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
-        String fieldExpressions =
+        java.lang.String fieldExpressions =
                 Arrays.stream(conditionFields)
                         .map(f -> format("%s = ?", quoteIdentifier(f)))
                         .collect(Collectors.joining(" AND "));
@@ -264,13 +264,13 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** Get select fields statement by condition fields. Default use SELECT. */
-    default String getSelectFromStatement(
-            String schemaName,
-            String tableName,
-            String customSql,
-            String[] selectFields,
-            String where) {
-        String selectExpressions =
+    default java.lang.String getSelectFromStatement(
+            java.lang.String schemaName,
+            java.lang.String tableName,
+            java.lang.String customSql,
+            java.lang.String[] selectFields,
+            java.lang.String where) {
+        java.lang.String selectExpressions =
                 Arrays.stream(selectFields)
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
@@ -298,19 +298,19 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** Get select fields and customFields statement by condition fields. Default use SELECT. */
-    default String getSelectFromStatement(
-            String schemaName,
-            String tableName,
-            String customSql,
-            String[] selectFields,
-            String[] selectCustomFields,
-            String where) {
-        String selectExpressions =
+    default java.lang.String getSelectFromStatement(
+            java.lang.String schemaName,
+            java.lang.String tableName,
+            java.lang.String customSql,
+            java.lang.String[] selectFields,
+            java.lang.String[] selectCustomFields,
+            java.lang.String where) {
+        java.lang.String selectExpressions =
                 Arrays.stream(selectFields)
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
         if (Objects.nonNull(selectCustomFields) && selectCustomFields.length > 0) {
-            selectExpressions = selectExpressions + ", " + String.join(", ", selectCustomFields);
+            selectExpressions = selectExpressions + ", " + java.lang.String.join(", ", selectCustomFields);
         }
         StringBuilder sql = new StringBuilder(128);
         sql.append("SELECT ");
@@ -334,7 +334,7 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** build table-info with schema-info and table-name, like 'schema-info.table-name' */
-    default String buildTableInfoWithSchema(String schema, String tableName) {
+    default java.lang.String buildTableInfoWithSchema(java.lang.String schema, java.lang.String tableName) {
         if (StringUtils.isNotBlank(schema)) {
             return quoteIdentifier(schema) + "." + quoteIdentifier(tableName);
         } else {
@@ -343,17 +343,17 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** build row number field */
-    default String getRowNumColumn(String orderBy) {
+    default java.lang.String getRowNumColumn(java.lang.String orderBy) {
         throw new UnsupportedOperationException("Not support row_number function");
     }
 
     /** get splitKey aliasName */
-    default String getRowNumColumnAlias() {
+    default java.lang.String getRowNumColumnAlias() {
         return "CHUNJUN_ROWNUM";
     }
 
     /** build split filter by range, like 'id >=0 and id < 100' */
-    default String getSplitRangeFilter(JdbcInputSplit split, String splitPkName) {
+    default java.lang.String getSplitRangeFilter(JdbcInputSplit split, java.lang.String splitPkName) {
         StringBuilder sql = new StringBuilder(128);
         if (StringUtils.isNotBlank(split.getStartLocationOfSplit())) {
             sql.append(quoteIdentifier(splitPkName))
@@ -374,13 +374,13 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** build split filter by mod, like ' mod(id,2) = 1' */
-    default String getSplitModFilter(JdbcInputSplit split, String splitPkName) {
-        return String.format(
+    default java.lang.String getSplitModFilter(JdbcInputSplit split, java.lang.String splitPkName) {
+        return java.lang.String.format(
                 " mod(%s, %s) = %s",
                 quoteIdentifier(splitPkName), split.getTotalNumberOfSplits(), split.getMod());
     }
 
-    default KeyUtil<?, BigInteger> initKeyUtil(String incrementName, String incrementType) {
+    default KeyUtil<?, BigInteger> initKeyUtil(java.lang.String incrementName, java.lang.String incrementType) {
         switch (ColumnType.getType(incrementType)) {
             case TIMESTAMP:
             case DATETIME:
@@ -392,7 +392,7 @@ public interface JdbcDialect extends Serializable {
                     return new NumericTypeUtil();
                 } else {
                     throw new ChunJunRuntimeException(
-                            String.format(
+                            java.lang.String.format(
                                     "Unsupported columnType [%s], columnName [%s]",
                                     incrementType, incrementName));
                 }
@@ -400,7 +400,7 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** catalog/schema/table */
-    default Function<JdbcConf, Tuple3<String, String, String>> getTableIdentify() {
+    default Function<JdbcConf, Tuple3<java.lang.String, java.lang.String, java.lang.String>> getTableIdentify() {
         return conf -> Tuple3.of(null, conf.getSchema(), conf.getTable());
     }
 }

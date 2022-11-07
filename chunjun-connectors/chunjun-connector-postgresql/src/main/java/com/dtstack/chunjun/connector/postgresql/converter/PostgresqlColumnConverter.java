@@ -24,7 +24,7 @@ package com.dtstack.chunjun.connector.postgresql.converter;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 import com.dtstack.chunjun.element.AbstractBaseColumn;
@@ -65,9 +65,9 @@ import java.util.Map;
  */
 public class PostgresqlColumnConverter extends JdbcColumnConverter {
 
-    private List<String> fieldTypeList;
+    private List<java.lang.String> fieldTypeList;
     private transient BaseConnection connection;
-    private static final Map<String, Integer> arrayType = new HashMap<>();
+    private static final Map<java.lang.String, Integer> arrayType = new HashMap<>();
 
     public PostgresqlColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
         super(rowType, commonConf);
@@ -81,12 +81,12 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    public FieldNamedPreparedStatement toExternal(
-            RowData rowData, FieldNamedPreparedStatement statement) throws Exception {
+    public String toExternal(
+            RowData rowData, String statement) throws Exception {
         for (int index = 0; index < rowData.getArity(); index++) {
             if (arrayType.containsKey(fieldTypeList.get(index))) {
                 // eg: {1000,1000,10001}、{{1000,1000,10001},{1,2,3}}
-                String field = ((ColumnRowData) rowData).getField(index).asString();
+                java.lang.String field = ((ColumnRowData) rowData).getField(index).asString();
                 Array array =
                         new PgArray(connection, arrayType.get(fieldTypeList.get(index)), field);
                 AbstractBaseColumn arrayColumn = new SqlArrayColumn(array);
@@ -115,7 +115,7 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
                             switch (yearMonthIntervalType.getResolution()) {
                                 case YEAR:
                                     return new BigDecimalColumn(
-                                            Integer.parseInt(String.valueOf(val).substring(0, 4)));
+                                            Integer.parseInt(java.lang.String.valueOf(val).substring(0, 4)));
                                 case MONTH:
                                 case YEAR_TO_MONTH:
                                 default:
@@ -133,7 +133,7 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
                 return val -> new BigDecimalColumn((BigDecimal) val);
             case CHAR:
             case VARCHAR:
-                return val -> new StringColumn((String) val);
+                return val -> new StringColumn((java.lang.String) val);
             case DATE:
                 return val -> new SqlDateColumn((Date) val);
             case TIME_WITHOUT_TIME_ZONE:
@@ -158,7 +158,7 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
@@ -217,7 +217,7 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
         }
     }
 
-    public void setFieldTypeList(List<String> fieldTypeList) {
+    public void setFieldTypeList(List<java.lang.String> fieldTypeList) {
         this.fieldTypeList = fieldTypeList;
     }
 

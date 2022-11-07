@@ -20,7 +20,7 @@ package com.dtstack.chunjun.connector.oracle.dialect;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.connector.jdbc.util.key.KeyUtil;
 import com.dtstack.chunjun.connector.jdbc.util.key.NumericTypeUtil;
 import com.dtstack.chunjun.connector.oracle.converter.OracleColumnConverter;
@@ -53,12 +53,12 @@ import java.util.stream.Collectors;
 public class OracleDialect implements JdbcDialect {
 
     @Override
-    public String dialectName() {
+    public java.lang.String dialectName() {
         return "ORACLE";
     }
 
     @Override
-    public boolean canHandle(String url) {
+    public boolean canHandle(java.lang.String url) {
         return url.startsWith("jdbc:oracle:thin:");
     }
 
@@ -68,22 +68,22 @@ public class OracleDialect implements JdbcDialect {
     }
 
     @Override
-    public Optional<String> defaultDriverName() {
+    public Optional<java.lang.String> defaultDriverName() {
         return Optional.of("oracle.jdbc.OracleDriver");
     }
 
     @Override
-    public Optional<String> getReplaceStatement(
-            String schema, String tableName, String[] fieldNames) {
+    public Optional<java.lang.String> getReplaceStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames) {
         throw new RuntimeException("Oracle does not support replace sql");
     }
 
     @Override
-    public Optional<String> getUpsertStatement(
-            String schema,
-            String tableName,
-            String[] fieldNames,
-            String[] uniqueKeyFields,
+    public Optional<java.lang.String> getUpsertStatement(
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] fieldNames,
+            java.lang.String[] uniqueKeyFields,
             boolean allReplace) {
         tableName = buildTableInfoWithSchema(schema, tableName);
         StringBuilder mergeIntoSql = new StringBuilder(64);
@@ -96,7 +96,7 @@ public class OracleDialect implements JdbcDialect {
                 .append(buildEqualConditions(uniqueKeyFields))
                 .append(") ");
 
-        String updateSql = buildUpdateConnection(fieldNames, uniqueKeyFields, allReplace);
+        java.lang.String updateSql = buildUpdateConnection(fieldNames, uniqueKeyFields, allReplace);
 
         if (StringUtils.isNotEmpty(updateSql)) {
             mergeIntoSql.append(" WHEN MATCHED THEN UPDATE SET ");
@@ -121,21 +121,21 @@ public class OracleDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getRowConverter(RowType rowType) {
         return new OracleRowConverter(rowType);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
         return new OracleColumnConverter(rowType, commonConf);
     }
 
     /** build select sql , such as (SELECT ? "A",? "B" FROM DUAL) */
-    public String buildDualQueryStatement(String[] column) {
+    public java.lang.String buildDualQueryStatement(java.lang.String[] column) {
         StringBuilder sb = new StringBuilder("SELECT ");
-        String collect =
+        java.lang.String collect =
                 Arrays.stream(column)
                         .map(col -> ":" + col + " " + quoteIdentifier(col))
                         .collect(Collectors.joining(", "));
@@ -144,16 +144,16 @@ public class OracleDialect implements JdbcDialect {
     }
 
     /** build sql part e.g: T1.`A` = T2.`A`, T1.`B` = T2.`B` */
-    private String buildEqualConditions(String[] uniqueKeyFields) {
+    private java.lang.String buildEqualConditions(java.lang.String[] uniqueKeyFields) {
         return Arrays.stream(uniqueKeyFields)
                 .map(col -> "T1." + quoteIdentifier(col) + " = T2." + quoteIdentifier(col))
                 .collect(Collectors.joining(" and "));
     }
 
     /** build T1."A"=T2."A" or T1."A"=nvl(T2."A",T1."A") */
-    private String buildUpdateConnection(
-            String[] fieldNames, String[] uniqueKeyFields, boolean allReplace) {
-        List<String> uniqueKeyList = Arrays.asList(uniqueKeyFields);
+    private java.lang.String buildUpdateConnection(
+            java.lang.String[] fieldNames, java.lang.String[] uniqueKeyFields, boolean allReplace) {
+        List<java.lang.String> uniqueKeyList = Arrays.asList(uniqueKeyFields);
         return Arrays.stream(fieldNames)
                 .filter(col -> !uniqueKeyList.contains(col))
                 .map(col -> buildConnectString(allReplace, col))
@@ -164,7 +164,7 @@ public class OracleDialect implements JdbcDialect {
      * Depending on parameter [allReplace] build different sql part. e.g T1."A"=T2."A" or
      * T1."A"=nvl(T2."A",T1."A")
      */
-    private String buildConnectString(boolean allReplace, String col) {
+    private java.lang.String buildConnectString(boolean allReplace, java.lang.String col) {
         return allReplace
                 ? "T1." + quoteIdentifier(col) + " = T2." + quoteIdentifier(col)
                 : "T1."
@@ -177,12 +177,12 @@ public class OracleDialect implements JdbcDialect {
     }
 
     @Override
-    public String getRowNumColumn(String orderBy) {
+    public java.lang.String getRowNumColumn(java.lang.String orderBy) {
         return "rownum as " + getRowNumColumnAlias();
     }
 
     @Override
-    public KeyUtil<?, BigInteger> initKeyUtil(String incrementName, String incrementType) {
+    public KeyUtil<?, BigInteger> initKeyUtil(java.lang.String incrementName, java.lang.String incrementType) {
         switch (ColumnType.getType(incrementType)) {
             case TIMESTAMP:
             case DATE:
@@ -192,7 +192,7 @@ public class OracleDialect implements JdbcDialect {
                     return new NumericTypeUtil();
                 } else {
                     throw new ChunJunRuntimeException(
-                            String.format(
+                            java.lang.String.format(
                                     "Unsupported columnType [%s], columnName [%s]",
                                     incrementType, incrementName));
                 }

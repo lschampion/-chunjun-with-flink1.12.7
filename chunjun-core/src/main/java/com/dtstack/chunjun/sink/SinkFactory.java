@@ -49,7 +49,7 @@ public abstract class SinkFactory implements RawTypeConvertible {
 
     public SinkFactory(SyncConf syncConf) {
         this.syncConf = syncConf;
-
+        // TODO: lisai：useAbstractBaseColumn 待理解
         if (syncConf.getTransformer() != null
                 && StringUtils.isNotBlank(syncConf.getTransformer().getTransformSql())) {
             useAbstractBaseColumn = false;

@@ -55,7 +55,7 @@ import java.sql.Timestamp;
  *   ResultSet rs = st.executeQuery();
  * </pre>
  */
-public interface FieldNamedPreparedStatement extends AutoCloseable {
+public interface String extends AutoCloseable {
 
     /**
      * Creates a <code>NamedPreparedStatement</code> object for sending parameterized SQL statements
@@ -66,9 +66,9 @@ public interface FieldNamedPreparedStatement extends AutoCloseable {
      *     placeholders
      * @param fieldNames the field names in schema order used as the parameter names
      */
-    static FieldNamedPreparedStatement prepareStatement(
-            Connection connection, String sql, String[] fieldNames) throws SQLException {
-        return FieldNamedPreparedStatementImpl.prepareStatement(connection, sql, fieldNames);
+    static String prepareStatement(
+            Connection connection, java.lang.String sql, java.lang.String[] fieldNames) throws SQLException {
+        return StringImpl.prepareStatement(connection, sql, fieldNames);
     }
 
     /**
@@ -202,9 +202,9 @@ public interface FieldNamedPreparedStatement extends AutoCloseable {
      * the argument's size relative to the driver's limits on <code>VARCHAR</code> values) when it
      * sends it to the database.
      *
-     * @see PreparedStatement#setString(int, String)
+     * @see PreparedStatement#setString(int, java.lang.String)
      */
-    void setString(int fieldIndex, String x) throws SQLException;
+    void setString(int fieldIndex, java.lang.String x) throws SQLException;
 
     /**
      * Sets the designated parameter to the given Java array of bytes. The driver converts this to

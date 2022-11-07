@@ -20,7 +20,7 @@ package com.dtstack.chunjun.connector.postgresql.dialect;
 
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.connector.jdbc.dialect.JdbcDialect;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.connector.jdbc.util.JdbcUtil;
 import com.dtstack.chunjun.connector.postgresql.converter.PostgresqlColumnConverter;
 import com.dtstack.chunjun.connector.postgresql.converter.PostgresqlRawTypeConverter;
@@ -45,20 +45,20 @@ import java.util.stream.Collectors;
  */
 public class PostgresqlDialect implements JdbcDialect {
 
-    private static final String DIALECT_NAME = "PostgreSQL";
-    private static final String DRIVER = "org.postgresql.Driver";
-    private static final String URL_START = "jdbc:postgresql:";
+    private static final java.lang.String DIALECT_NAME = "PostgreSQL";
+    private static final java.lang.String DRIVER = "org.postgresql.Driver";
+    private static final java.lang.String URL_START = "jdbc:postgresql:";
 
-    private static final String COPY_SQL_TEMPL =
+    private static final java.lang.String COPY_SQL_TEMPL =
             "copy %s(%s) from stdin DELIMITER '%s' NULL as '%s'";
 
     @Override
-    public String dialectName() {
+    public java.lang.String dialectName() {
         return DIALECT_NAME;
     }
 
     @Override
-    public boolean canHandle(String url) {
+    public boolean canHandle(java.lang.String url) {
         return url.startsWith(URL_START);
     }
 
@@ -68,26 +68,26 @@ public class PostgresqlDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, FieldNamedPreparedStatement, LogicalType>
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
             getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
         return new PostgresqlColumnConverter(rowType, commonConf);
     }
 
     @Override
-    public Optional<String> defaultDriverName() {
+    public Optional<java.lang.String> defaultDriverName() {
         return Optional.of(DRIVER);
     }
 
     /** Postgres upsert query. It use ON CONFLICT ... DO UPDATE SET.. to replace into Postgres. */
     @Override
-    public Optional<String> getUpsertStatement(
-            String schema,
-            String tableName,
-            String[] fieldNames,
-            String[] uniqueKeyFields,
+    public Optional<java.lang.String> getUpsertStatement(
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] fieldNames,
+            java.lang.String[] uniqueKeyFields,
             boolean allReplace) {
-        String updateClause;
-        String uniqueColumns =
+        java.lang.String updateClause;
+        java.lang.String uniqueColumns =
                 Arrays.stream(uniqueKeyFields)
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
@@ -107,13 +107,13 @@ public class PostgresqlDialect implements JdbcDialect {
     }
 
     @Override
-    public String getSelectFromStatement(
-            String schemaName,
-            String tableName,
-            String customSql,
-            String[] selectFields,
-            String where) {
-        String selectExpressions =
+    public java.lang.String getSelectFromStatement(
+            java.lang.String schemaName,
+            java.lang.String tableName,
+            java.lang.String customSql,
+            java.lang.String[] selectFields,
+            java.lang.String where) {
+        java.lang.String selectExpressions =
                 Arrays.stream(selectFields)
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
@@ -139,12 +139,12 @@ public class PostgresqlDialect implements JdbcDialect {
         return sql.toString();
     }
 
-    public String getCopyStatement(
-            String tableName, String[] fields, String fieldDelimiter, String nullVal) {
-        String fieldsExpression =
+    public java.lang.String getCopyStatement(
+            java.lang.String tableName, java.lang.String[] fields, java.lang.String fieldDelimiter, java.lang.String nullVal) {
+        java.lang.String fieldsExpression =
                 Arrays.stream(fields).map(this::quoteIdentifier).collect(Collectors.joining(", "));
 
-        return String.format(
+        return java.lang.String.format(
                 COPY_SQL_TEMPL,
                 quoteIdentifier(tableName),
                 fieldsExpression,

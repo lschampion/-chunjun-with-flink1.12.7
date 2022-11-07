@@ -21,7 +21,7 @@ package com.dtstack.chunjun.connector.sqlserver.converter;
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.conf.FieldConf;
 import com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter;
-import com.dtstack.chunjun.connector.jdbc.statement.FieldNamedPreparedStatement;
+import com.dtstack.chunjun.connector.jdbc.statement.String;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.converter.ISerializationConverter;
 import com.dtstack.chunjun.element.AbstractBaseColumn;
@@ -78,7 +78,7 @@ public class SqlserverJtdsColumnConverter extends JdbcColumnConverter {
                 // in sqlserver, timestamp type is a binary array of 8 bytes.
                 if ("timestamp".equalsIgnoreCase(fieldConf.getType())) {
                     byte[] value = (byte[]) field;
-                    String hexString = StringUtil.bytesToHexString(value);
+                    java.lang.String hexString = StringUtil.bytesToHexString(value);
                     baseColumn = new BigDecimalColumn(Long.parseLong(hexString, 16));
                 } else {
                     baseColumn =
@@ -115,9 +115,9 @@ public class SqlserverJtdsColumnConverter extends JdbcColumnConverter {
                 return val -> new TimeColumn((Time) val);
             case TIMESTAMP_WITH_TIME_ZONE:
                 return val -> {
-                    String[] timeAndTimeZone = String.valueOf(val).split(" ");
+                    java.lang.String[] timeAndTimeZone = java.lang.String.valueOf(val).split(" ");
                     if (timeAndTimeZone.length == 2) {
-                        Timestamp timestamp = Timestamp.valueOf(String.valueOf(val));
+                        Timestamp timestamp = Timestamp.valueOf(java.lang.String.valueOf(val));
                         long localTime =
                                 timestamp.getTime()
                                         + (long) getMillSecondDiffWithTimeZone(timeAndTimeZone[1]);
@@ -141,7 +141,7 @@ public class SqlserverJtdsColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<FieldNamedPreparedStatement> createExternalConverter(
+    protected ISerializationConverter<String> createExternalConverter(
             LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
@@ -206,7 +206,7 @@ public class SqlserverJtdsColumnConverter extends JdbcColumnConverter {
         return getMillSecondOffset() / 1000 / 60;
     }
 
-    public int getMillSecondDiffWithTimeZone(String sqlServerTimeZone) {
+    public int getMillSecondDiffWithTimeZone(java.lang.String sqlServerTimeZone) {
         long currentTimeMillis = System.currentTimeMillis();
         TimeZone timeZone = TimeZone.getTimeZone("GMT" + sqlServerTimeZone);
         return timeZone.getOffset(currentTimeMillis) - getMillSecondOffset(currentTimeMillis);

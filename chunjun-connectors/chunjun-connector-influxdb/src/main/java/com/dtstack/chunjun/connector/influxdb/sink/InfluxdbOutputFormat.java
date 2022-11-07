@@ -80,7 +80,7 @@ public class InfluxdbOutputFormat extends BaseRichOutputFormat {
         this.timestamp = sinkConfig.getTimestamp();
         this.precision = TimePrecisionEnums.of(sinkConfig.getPrecision()).getPrecision();
         this.tags = sinkConfig.getTags();
-        establishConnnection();
+        establishConnection();
         influxDB.setDatabase(database);
         List<FieldConf> column = sinkConfig.getColumn();
         columnNameList = column.stream().map(FieldConf::getName).collect(Collectors.toList());
@@ -99,7 +99,7 @@ public class InfluxdbOutputFormat extends BaseRichOutputFormat {
         if (influxDB != null) Runtime.getRuntime().addShutdownHook(new Thread(influxDB::close));
     }
 
-    private void establishConnnection() {
+    private void establishConnection() {
         if (influxDB != null) return;
         LOG.info("Get the connection for influxdb");
         OkHttpClient.Builder clientBuilder =
