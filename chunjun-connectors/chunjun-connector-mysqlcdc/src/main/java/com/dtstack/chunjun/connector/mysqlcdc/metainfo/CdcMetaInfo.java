@@ -36,14 +36,7 @@ public class CdcMetaInfo {
     public String schema;
     public String table;
     public String jdbcUrl;
-
-    public List<Triple<String, String, DataType>> getColumnMetaFull() {
-        return columnMetaFull;
-    }
-
-    public List<Triple<String, String, DataType>> getColumnMetaSelected() {
-        return columnMetaSelected;
-    }
+    public String[] fieldArr;
 
     public List<Triple<String, String, DataType>> columnMetaFull;
     public List<Triple<String, String, DataType>> columnMetaSelected;
@@ -52,17 +45,21 @@ public class CdcMetaInfo {
     protected String defaultDriverName;
     protected String defaultJdbcUrl;
 
-
     public String getUsername() {
         return username;
     }
-
     public String getPassword() {
         return password;
     }
 
+    public List<Triple<String, String, DataType>> getColumnMetaFull() {
+        return columnMetaFull;
+    }
+    public List<Triple<String, String, DataType>> getColumnMetaSelected() {
+        return columnMetaSelected;
+    }
 
-    public CdcMetaInfo(EDatabaseType databaseType, String host, int port, String username, String password, String database, String schema, String table, boolean isSingleTableWithSelect) {
+    public CdcMetaInfo(EDatabaseType databaseType, String host, int port, String username, String password, String database, String schema, String table,String[] fieldArr) {
         this.databaseType = databaseType;
         this.host = host;
         this.port = port;
@@ -71,9 +68,19 @@ public class CdcMetaInfo {
         this.table = table;
         this.username = username;
         this.password = password;
-        this.isSingleTableWithSelect = isSingleTableWithSelect;
+        this.fieldArr=fieldArr;
         this.columnMetaFull=new ArrayList<>();
         this.columnMetaSelected=new ArrayList<>();
+        if(fieldArr!=null && fieldArr.length>0){
+            if(fieldArr.length==1&& "*".equals(fieldArr[0])){
+                this.isSingleTableWithSelect=false;
+            }else {
+                this.isSingleTableWithSelect = true;
+            }
+        } else {
+            this.isSingleTableWithSelect = true;
+        }
+
         initDefaultFields(databaseType);
         buildMetaData(this.database, this.schema, this.table);
     }
@@ -137,6 +144,15 @@ public class CdcMetaInfo {
             DataType dataType = MysqlCdcRawTypeConverter.apply(tableType);
             columnMetaFull.add(new ImmutableTriple<>(tableName, tableType, dataType));
         }
+        // 修改selected column
+        for (String field : fieldArr) {
+            for (Triple<String, String, DataType> triple : columnMetaFull) {
+                if(triple.getLeft().equalsIgnoreCase(field)){
+                    columnMetaSelected.add(triple);
+                }
+            }
+        }
+
     }
 
 

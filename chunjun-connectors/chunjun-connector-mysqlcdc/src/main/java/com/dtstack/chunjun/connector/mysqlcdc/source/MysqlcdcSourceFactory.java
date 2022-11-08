@@ -20,7 +20,6 @@ package com.dtstack.chunjun.connector.mysqlcdc.source;
 
 import com.alibaba.ververica.cdc.connectors.mysql.MySQLSource;
 import com.alibaba.ververica.cdc.connectors.mysql.table.StartupOptions;
-
 import com.alibaba.ververica.cdc.debezium.DebeziumDeserializationSchema;
 import com.alibaba.ververica.cdc.debezium.DebeziumSourceFunction;
 
@@ -30,6 +29,7 @@ import com.dtstack.chunjun.connector.jdbc.adapter.ConnectionAdapter;
 import com.dtstack.chunjun.connector.jdbc.conf.CdcConf;
 import com.dtstack.chunjun.connector.jdbc.conf.ConnectionConf;
 import com.dtstack.chunjun.connector.jdbc.exclusion.FieldNameExclusionStrategy;
+import com.dtstack.chunjun.connector.mysqlcdc.converter.MysqlCdcColumnTypeConverter;
 import com.dtstack.chunjun.connector.mysqlcdc.converter.MysqlCdcRawTypeConverter;
 import com.dtstack.chunjun.connector.mysqlcdc.converter.MysqlRowDataDebeziumDeserializeSchema;
 import com.dtstack.chunjun.connector.mysqlcdc.metainfo.CdcMetaInfo;
@@ -57,13 +57,10 @@ import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.types.DataType;
 import org.apache.flink.table.types.logical.RowType;
 import org.apache.flink.types.RowKind;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,9 +108,9 @@ public class MysqlcdcSourceFactory extends SourceFactory {
         // TODO: lisai 判断是否是"*",else 中是原始内容
         if (syncConf.getReader().getFieldList().size() == 1 && "*".equals(syncConf.getReader().getFieldList().get(0).getName())) {
             LOG.info("Cdc Source use full columns for reason of \"*\")");
-
             CdcMetaInfo cdcMetaInfo = this.cdcMetaInfos.get(0);
-            cdcMetaInfo.getColumnMetaFull()
+            // 使用已经选择的列
+            cdcMetaInfo.getColumnMetaSelected()
                     .forEach(col -> {
                         dataTypes.add(DataTypes.FIELD(col.getLeft(), col.getRight()));
                     });
@@ -180,6 +177,7 @@ public class MysqlcdcSourceFactory extends SourceFactory {
 
 
     private void initTableMetaInfos(CdcConf cdcConf, EDatabaseType databaseType) {
+        String[] fieldArr = syncConf.getReader().getFieldList().stream().map(FieldConf::getName).toArray(String[]::new);
         String host = cdcConf.getHost();
         int port = cdcConf.getPort();
         String database = cdcConf.getDatabase();
@@ -205,7 +203,7 @@ public class MysqlcdcSourceFactory extends SourceFactory {
                     break;
                 default:
             }
-            CdcMetaInfo info = new CdcMetaInfo(databaseType, host, port, username, password, database, schema, table, isSingleTableWithSelect);
+            CdcMetaInfo info = new CdcMetaInfo(databaseType, host, port, username, password, database, schema, table,fieldArr);
             return info;
         }).collect(Collectors.toList());
         this.cdcMetaInfos = infos;
@@ -227,12 +225,16 @@ public class MysqlcdcSourceFactory extends SourceFactory {
     }
 
     private DebeziumDeserializationSchema<RowData> buildRowDataDebeziumDeserializeSchema(DataType dataType) {
-        MysqlRowDataDebeziumDeserializeSchema schema = new MysqlRowDataDebeziumDeserializeSchema(
-                (RowType) dataType.getLogicalType(),
-                getTypeInformation(),
-                new DemoValueValidator(),
-                ZoneOffset.UTC);
-        return schema;
+        // TODO: lisai 返回值是GenericRowData
+//        MysqlRowDataDebeziumDeserializeSchema schema = new MysqlRowDataDebeziumDeserializeSchema(
+//                (RowType) dataType.getLogicalType(),
+//                getTypeInformation(),
+//                new DemoValueValidator(),
+//                ZoneOffset.UTC);
+//        return schema;
+        // TODO: lisai 返回值是AbstractRowData
+        MysqlCdcColumnTypeConverter converter = new MysqlCdcColumnTypeConverter(getTypeInformation());
+        return converter;
     }
 
     protected Class<? extends CdcConf> getConfClass() {
