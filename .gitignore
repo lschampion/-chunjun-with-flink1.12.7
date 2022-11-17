@@ -51,3 +51,7 @@ chunjun-dist/
 
 chunjun-dev/data/**
 output/*
+character-set-server=utf8mb4dd
+
+!ext-jars
+!ext-jars/*
