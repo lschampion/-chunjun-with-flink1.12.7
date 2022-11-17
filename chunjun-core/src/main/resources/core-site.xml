@@ -1,0 +1,473 @@
+  <configuration  xmlns:xi="http://www.w3.org/2001/XInclude">
+    
+    <property>
+      <name>fs.azure.user.agent.prefix</name>
+      <value>User-Agent: APN/1.0 Hortonworks/1.0 HDP/3.0.1.0-187</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.access.key</name>
+      <value>6CQ1Q4ARI4SWTXMC0R7M</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.bucketName</name>
+      <value>bucketName</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.connection.establish.timeout</name>
+      <value>50000</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.connection.maximum</name>
+      <value>500</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.endpoint</name>
+      <value>IP:8082</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.fast.upload</name>
+      <value>true</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.fast.upload.active.blocks</name>
+      <value>8</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.fast.upload.buffer</name>
+      <value>bytebuffer</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.max.total.tasks</name>
+      <value>8</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.multipart.size</name>
+      <value>8388608</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.path.style.access</name>
+      <value>true</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.rados.id</name>
+      <value>admin</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.rados.key</name>
+      <value>134217728</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.rados.mon_host</name>
+      <value>ip1,ip2,ip3</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.rados.pool_name</name>
+      <value>poolNmae</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.secret.key</name>
+      <value>0nTKDNlD7924GzjVQQp5h5kvvfxTJnZkZDyDPsSy</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.signing-algorithm</name>
+      <value>S3SignerType</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.storage.separation.enabled</name>
+      <value>false</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.storage.type</name>
+      <value>s3a</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.threads.max</name>
+      <value>10</value>
+    </property>
+    
+    <property>
+      <name>fs.coss.user.agent.prefix</name>
+      <value>User-Agent: APN/1.0 Hortonworks/1.0 HDP/3.0.1.0-187</value>
+    </property>
+    
+    <property>
+      <name>fs.defaultFS</name>
+      <value>hdfs://mycluster</value>
+    </property>
+    
+    <property>
+      <name>fs.file.impl</name>
+      <value>org.apache.hadoop.fs.LocalFileSystem</value>
+    </property>
+    
+    <property>
+      <name>fs.hdfs.impl</name>
+      <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
+    </property>
+    
+    <property>
+      <name>fs.s3a.fast.upload</name>
+      <value>true</value>
+    </property>
+    
+    <property>
+      <name>fs.s3a.fast.upload.buffer</name>
+      <value>bytebuffer</value>
+    </property>
+    
+    <property>
+      <name>fs.s3a.user.agent.prefix</name>
+      <value>User-Agent: APN/1.0 Hortonworks/1.0 HDP/3.0.1.0-187</value>
+    </property>
+    
+    <property>
+      <name>fs.trash.interval</name>
+      <value>360</value>
+    </property>
+    
+    <property>
+      <name>ha.failover-controller.active-standby-elector.zk.op.retries</name>
+      <value>120</value>
+    </property>
+    
+    <property>
+      <name>ha.zookeeper.acl</name>
+      <value>sasl:nn:rwcda</value>
+    </property>
+    
+    <property>
+      <name>ha.zookeeper.quorum</name>
+      <value>h3coasists06.h3c.com:2181,h3coasists07.h3c.com:2181,h3coasists08.h3c.com:2181</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.authentication.provider.url</name>
+      <value>https://h3coasists06.h3c.com:28443/gateway/knoxsso/api/v1/websso,https://h3coasists07.h3c.com:28443/gateway/knoxsso/api/v1/websso</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.kerberos.keytab</name>
+      <value>/etc/security/keytabs/spnego.service.keytab</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.kerberos.principal</name>
+      <value>HTTP/_HOST@H3COASIS.COM</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.public.key.pem</name>
+      <value>MIICSTCCAbKgAwIBAgIIRkkis7VQhoQwDQYJKoZIhvcNAQEFBQAwZzELMAkGA1UEBhMCVVMxDTAL
+BgNVBAgTBFRlc3QxDTALBgNVBAcTBFRlc3QxDzANBgNVBAoTBkhhZG9vcDENMAsGA1UECxMEVGVz
+dDEaMBgGA1UEAxMRbm9kZTEuaGRlLmgzYy5jb20wHhcNMjAwNTI4MDk1MjAzWhcNNDAwNTIzMDk1
+MjAzWjBnMQswCQYDVQQGEwJVUzENMAsGA1UECBMEVGVzdDENMAsGA1UEBxMEVGVzdDEPMA0GA1UE
+ChMGSGFkb29wMQ0wCwYDVQQLEwRUZXN0MRowGAYDVQQDExFub2RlMS5oZGUuaDNjLmNvbTCBnzAN
+BgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApI7geaKeV2mJrBXlK3PQhJkfCQOTfQTd45WQ9+CjLywT
+LUL/O4WW9srzLhImnP7/6RHsBtyauZDRRpr7enUp6xTzJlbDG/9FcIlhifsNl74uOn4E5yi49vqH
+B3q8YCOl+SnNKIm2tQpQPv+SpcbnLnCLn5kyrMaB4i+z0LCjBssCAwEAATANBgkqhkiG9w0BAQUF
+AAOBgQADjgLbd8Sm/kaktZbHTESwLQKAYNgfB7wOfXXnErcbhi/ILwMrR2SwKgiPAM6xS5Zc0Q7E
+xq78Vk3NivJD/VwiLSkE3Ah+El5tRA5zTYhNPiKCtbfq9srZ6fh4UVxDhUhTQEDQrgzU+Xn8vRCH
+2B+loyda4m/0Dp7p2MzW/WzdAA==</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.signature.secret.file</name>
+      <value>/etc/security/http_secret</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+      <value>false</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.authentication.type</name>
+      <value>com.h3c.bigdata.auth.adapter.hadoop.JWTRedirectAuthenticationHandlerHA</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.cross-origin.allowed-headers</name>
+      <value>X-Requested-With,Content-Type,Accept,Origin,WWW-Authenticate,Accept-Encoding,Transfer-Encoding</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.cross-origin.allowed-methods</name>
+      <value>GET,PUT,POST,OPTIONS,HEAD,DELETE</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.cross-origin.allowed-origins</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.cross-origin.max-age</name>
+      <value>1800</value>
+    </property>
+    
+    <property>
+      <name>hadoop.http.filter.initializers</name>
+      <value>com.h3c.bigdata.auth.adapter.hadoop.FlowCtrlFilter,com.h3c.bigdata.auth.adapter.hadoop.AccessLogFilterInitializer,com.h3c.bigdata.auth.adapter.hadoop.InternalSpnegoFilter2,com.h3c.bigdata.auth.adapter.hadoop.AuthenticationFilterInitializer,org.apache.hadoop.security.HttpCrossOriginFilterInitializer</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.ambari-server-h3coasis.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.ambari-server-h3coasis.hosts</name>
+      <value>management0.h3c.com</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.h3coasis.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.h3coasis.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.hbase.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.hbase.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.hdfs.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.hdfs.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.hive.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.hive.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.HTTP.groups</name>
+      <value>users</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.HTTP.hosts</name>
+      <value>h3coasists06.h3c.com,h3coasists07.h3c.com,h3coasists08.h3c.com,h3coasists09.h3c.com,h3coasists10.h3c.com,h3coasists11.h3c.com,h3coasists12.h3c.com</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.kms.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.knox.groups</name>
+      <value>users</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.knox.hosts</name>
+      <value>h3coasists06.h3c.com,h3coasists07.h3c.com</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.livy.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.livy.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.mpp.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.mpp.users</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.oozie.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.oozie.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.spark.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.spark.hosts</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.yarn.groups</name>
+      <value>*</value>
+    </property>
+    
+    <property>
+      <name>hadoop.proxyuser.yarn.hosts</name>
+      <value>management0.h3c.com,management1.h3c.com</value>
+    </property>
+    
+    <property>
+      <name>hadoop.rpc.protection</name>
+      <value>authentication,privacy</value>
+    </property>
+    
+    <property>
+      <name>hadoop.security.auth_to_local</name>
+      <value>RULE:[1:$1@$0](ambari-qa-h3coasis@H3COASIS.COM)s/.*/ambari-qa/
+RULE:[1:$1@$0](hbase-h3coasis@H3COASIS.COM)s/.*/hbase/
+RULE:[1:$1@$0](hdfs-h3coasis@H3COASIS.COM)s/.*/hdfs/
+RULE:[1:$1@$0](spark-h3coasis@H3COASIS.COM)s/.*/spark/
+RULE:[1:$1@$0](yarn-ats-h3coasis@H3COASIS.COM)s/.*/yarn-ats/
+RULE:[1:$1@$0](.*@H3COASIS.COM)s/@.*//
+RULE:[2:$1@$0](atlas@H3COASIS.COM)s/.*/atlas/
+RULE:[2:$1@$0](dn@H3COASIS.COM)s/.*/hdfs/
+RULE:[2:$1@$0](elasticsearch@H3COASIS.COM)s/.*/elasticsearch/
+RULE:[2:$1@$0](hbase@H3COASIS.COM)s/.*/hbase/
+RULE:[2:$1@$0](hive@H3COASIS.COM)s/.*/hive/
+RULE:[2:$1@$0](jhs@H3COASIS.COM)s/.*/mapred/
+RULE:[2:$1@$0](jn@H3COASIS.COM)s/.*/hdfs/
+RULE:[2:$1@$0](knox@H3COASIS.COM)s/.*/knox/
+RULE:[2:$1@$0](livy@H3COASIS.COM)s/.*/livy/
+RULE:[2:$1@$0](nm@H3COASIS.COM)s/.*/yarn/
+RULE:[2:$1@$0](nn@H3COASIS.COM)s/.*/hdfs/
+RULE:[2:$1@$0](oozie@H3COASIS.COM)s/.*/oozie/
+RULE:[2:$1@$0](rangeradmin@H3COASIS.COM)s/.*/ranger/
+RULE:[2:$1@$0](rangerkms@H3COASIS.COM)s/.*/keyadmin/
+RULE:[2:$1@$0](rangerusersync@H3COASIS.COM)s/.*/rangerusersync/
+RULE:[2:$1@$0](rm@H3COASIS.COM)s/.*/yarn/
+RULE:[2:$1@$0](spark@H3COASIS.COM)s/.*/spark/
+RULE:[2:$1@$0](yarn@H3COASIS.COM)s/.*/yarn/
+RULE:[2:$1@$0](yarn-ats-hbase@H3COASIS.COM)s/.*/yarn-ats/
+DEFAULT</value>
+    </property>
+    
+    <property>
+      <name>hadoop.security.authentication</name>
+      <value>kerberos</value>
+    </property>
+    
+    <property>
+      <name>hadoop.security.authorization</name>
+      <value>true</value>
+    </property>
+    
+    <property>
+      <name>hadoop.security.instrumentation.requires.admin</name>
+      <value>false</value>
+    </property>
+    
+    <property>
+      <name>hadoop.security.key.provider.path</name>
+      <value>kms://http@management0.h3c.com;management1.h3c.com:9292/kms</value>
+    </property>
+    
+    <property>
+      <name>hadoop.security.uid.cache.secs</name>
+      <value>10</value>
+    </property>
+    
+    <property>
+      <name>io.compression.codecs</name>
+      <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.SnappyCodec</value>
+    </property>
+    
+    <property>
+      <name>io.file.buffer.size</name>
+      <value>131072</value>
+    </property>
+    
+    <property>
+      <name>io.serializations</name>
+      <value>org.apache.hadoop.io.serializer.WritableSerialization</value>
+    </property>
+    
+    <property>
+      <name>ipc.client.connect.max.retries</name>
+      <value>50</value>
+    </property>
+    
+    <property>
+      <name>ipc.client.connect.timeout</name>
+      <value>90000</value>
+    </property>
+    
+    <property>
+      <name>ipc.client.connection.maxidletime</name>
+      <value>30000</value>
+    </property>
+    
+    <property>
+      <name>ipc.client.idlethreshold</name>
+      <value>8000</value>
+    </property>
+    
+    <property>
+      <name>ipc.maximum.data.length</name>
+      <value>134217728</value>
+    </property>
+    
+    <property>
+      <name>ipc.server.tcpnodelay</name>
+      <value>true</value>
+    </property>
+    
+    <property>
+      <name>mapreduce.jobtracker.webinterface.trusted</name>
+      <value>false</value>
+    </property>
+    
+    <property>
+      <name>net.topology.script.file.name</name>
+      <value>/etc/hadoop/conf/topology_script.py</value>
+    </property>
+    
+  </configuration>

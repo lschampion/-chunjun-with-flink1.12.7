@@ -51,3 +51,9 @@ chunjun-dist/
 
 chunjun-dev/data/**
 output/*
+
+
+
+# dbeaver
+./database-script/.dbeaver
+./database-script/.settings
