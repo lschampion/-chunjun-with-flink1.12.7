@@ -85,6 +85,89 @@
                 {
                     "transformSql": "select s_id,s_name,s_sex from student"
                 }
+            },
+            {
+                "reader":
+                {
+                    "parameter":
+                    {
+                        "host": "localhost",
+                        "port": 3306,
+                        "username": "root",
+                        "password": "123456",
+                        "serverId": 1,
+                        "database": "test",
+                        "schemaList":
+                        [],
+                        "tableList":
+                        [
+                            "test.address"
+                        ],
+                        "column":
+                        [
+                            {
+                                "name": "a_id",
+                                "type": "bigint"
+                            },
+                            {
+                                "name": "a_name",
+                                "type": "string"
+                            },
+                            {
+                                "name": "a_city",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "table":
+                    {
+                        "tableName": "address"
+                    },
+                    "name": "mysqlcdcreader"
+                },
+                "writer":
+                {
+                    "parameter":
+                    {
+                        "column":
+                        [
+                            {
+                                "name": "a_id",
+                                "type": "bigint"
+                            },
+                            {
+                                "name": "a_name",
+                                "type": "string"
+                            },
+                            {
+                                "name": "a_city",
+                                "type": "string"
+                            }
+                        ],
+                        "username": "root",
+                        "password": "123456",
+                        "mode": "update",
+                        "connection":
+                        [
+                            {
+                                "jdbcUrl": "jdbc:mysql://localhost:3306/test?useSSL=false",
+                                "table":
+                                [
+                                    "address_sync"
+                                ]
+                            }
+                        ]
+                    },
+                    "table":
+                    {
+                        "tableName": "address_sync"
+                    },
+                    "name": "mysqlwriter"
+                },
+                "transformer":
+                {
+                    "transformSql": ""
+                }
             }
         ],
         "setting":

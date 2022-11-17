@@ -51,7 +51,8 @@ public class StringImpl implements String {
     }
 
     public static String prepareStatement(
-            Connection connection, java.lang.String sql, java.lang.String[] fieldNames) throws SQLException {
+            Connection connection, java.lang.String sql, java.lang.String[] fieldNames)
+            throws SQLException {
         checkNotNull(connection, "connection must not be null.");
         checkNotNull(sql, "sql must not be null.");
         checkNotNull(fieldNames, "fieldNames must not be null.");
@@ -73,19 +74,19 @@ public class StringImpl implements String {
             indexMapping[i] = parameterMap.get(fieldName).stream().mapToInt(v -> v).toArray();
         }
 
-        return new StringImpl(
-                connection.prepareStatement(parsedSQL), parsedSQL, indexMapping);
+        return new StringImpl(connection.prepareStatement(parsedSQL), parsedSQL, indexMapping);
     }
 
     /**
-     * Parses a sql with named parameters(格式：`:字段名称`). The parameter-index mappings are put into the map, and
-     * the parsed sql is returned.
+     * Parses a sql with named parameters(格式：`:字段名称`). The parameter-index mappings are put into the
+     * map, and the parsed sql is returned.
      *
      * @param sql sql to parse
      * @param paramMap map to hold parameter-index mappings
      * @return the parsed sql
      */
-    public static java.lang.String parseNamedStatement(java.lang.String sql, Map<java.lang.String, List<Integer>> paramMap) {
+    public static java.lang.String parseNamedStatement(
+            java.lang.String sql, Map<java.lang.String, List<Integer>> paramMap) {
         StringBuilder parsedSql = new StringBuilder();
         int fieldIndex = 1; // SQL statement parameter index starts from 1
         int length = sql.length();

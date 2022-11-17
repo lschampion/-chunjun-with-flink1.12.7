@@ -81,8 +81,7 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    public String toExternal(
-            RowData rowData, String statement) throws Exception {
+    public String toExternal(RowData rowData, String statement) throws Exception {
         for (int index = 0; index < rowData.getArity(); index++) {
             if (arrayType.containsKey(fieldTypeList.get(index))) {
                 // eg: {1000,1000,10001}、{{1000,1000,10001},{1,2,3}}
@@ -115,7 +114,8 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
                             switch (yearMonthIntervalType.getResolution()) {
                                 case YEAR:
                                     return new BigDecimalColumn(
-                                            Integer.parseInt(java.lang.String.valueOf(val).substring(0, 4)));
+                                            Integer.parseInt(
+                                                    java.lang.String.valueOf(val).substring(0, 4)));
                                 case MONTH:
                                 case YEAR_TO_MONTH:
                                 default:
@@ -158,8 +158,7 @@ public class PostgresqlColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

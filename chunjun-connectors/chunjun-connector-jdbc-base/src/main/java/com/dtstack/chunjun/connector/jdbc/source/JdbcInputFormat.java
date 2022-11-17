@@ -744,7 +744,8 @@ public class JdbcInputFormat extends BaseRichInputFormat {
                 resultSet = ps.executeQuery();
                 hasNext = resultSet.next();
                 // 每隔五分钟打印一次，(当前时间 - 任务开始时间) % 300秒 <= 一个间隔轮询周期
-                if ((System.currentTimeMillis() - startTime) % 300000 <= jdbcConf.getPollingInterval()) {
+                if ((System.currentTimeMillis() - startTime) % 300000
+                        <= jdbcConf.getPollingInterval()) {
                     LOG.info(
                             "no record matched condition in database, execute query sql = {}, startLocation = {}",
                             jdbcConf.getQuerySql(),

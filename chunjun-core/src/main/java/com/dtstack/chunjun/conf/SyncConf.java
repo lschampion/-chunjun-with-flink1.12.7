@@ -18,7 +18,6 @@
 package com.dtstack.chunjun.conf;
 
 import com.dtstack.chunjun.cdc.CdcConf;
-import com.dtstack.chunjun.decoder.JsonDecoder;
 import com.dtstack.chunjun.mapping.NameMappingConf;
 import com.dtstack.chunjun.util.GsonUtil;
 
@@ -64,7 +63,7 @@ public class SyncConf implements Serializable {
         // 解析job文件主方法：
         SyncConf config = GsonUtil.GSON.fromJson(jobJson, SyncConf.class);
         checkJob(config);
-        LOG.info("SyncConf:\n"+config.toString());
+        LOG.info("SyncConf:\n" + config.toString());
         return config;
     }
 

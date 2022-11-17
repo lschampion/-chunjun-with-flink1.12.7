@@ -105,7 +105,7 @@ public class Main {
         LOG.info("-------------------------------------------");
 
         Options options = new OptionParser(args).getOptions();
-        LOG.info("options:\n"+options);
+        LOG.info("options:\n" + options);
 
         String job = URLDecoder.decode(options.getJob(), StandardCharsets.UTF_8.name());
         String replacedJob = JobUtil.replaceJobParameter(options.getP(), job);

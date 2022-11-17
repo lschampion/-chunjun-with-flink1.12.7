@@ -172,14 +172,14 @@ public class DmDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getRowConverter(RowType rowType) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getRowConverter(
+            RowType rowType) {
         return new DmRowConverter(rowType);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         return new DmColumnConverter(rowType, commonConf);
     }
 }

@@ -141,8 +141,7 @@ public class SqlserverJtdsColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

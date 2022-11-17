@@ -35,7 +35,7 @@ public class TransformerConf implements Serializable {
     private String transformSql;
 
     public String getTransformSql() {
-        LOG.info("TransformerConf:\n"+transformSql);
+        LOG.info("TransformerConf:\n" + transformSql);
         return transformSql;
     }
 

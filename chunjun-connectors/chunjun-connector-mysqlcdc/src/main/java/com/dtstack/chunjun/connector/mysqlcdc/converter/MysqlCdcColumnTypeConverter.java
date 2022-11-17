@@ -18,9 +18,7 @@
 
 package com.dtstack.chunjun.connector.mysqlcdc.converter;
 
-import com.alibaba.ververica.cdc.debezium.DebeziumDeserializationSchema;
-
-import com.dtstack.chunjun.constants.ConstantValue;
+import com.dtstack.chunjun.connector.mysqlcdc.enums.UpdateType;
 import com.dtstack.chunjun.converter.AbstractCDCRowConverter;
 import com.dtstack.chunjun.converter.IDeserializationConverter;
 import com.dtstack.chunjun.element.AbstractBaseColumn;
@@ -32,26 +30,16 @@ import com.dtstack.chunjun.element.column.SqlDateColumn;
 import com.dtstack.chunjun.element.column.StringColumn;
 import com.dtstack.chunjun.element.column.TimeColumn;
 import com.dtstack.chunjun.element.column.TimestampColumn;
-import com.dtstack.chunjun.util.DateUtil;
-
-import io.debezium.data.Envelope;
-import org.apache.commons.lang3.StringUtils;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-
-import com.dtstack.chunjun.connector.mysqlcdc.enums.UpdateType;
 
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.runtime.typeutils.InternalTypeInfo;
-import org.apache.flink.table.types.DataType;
 import org.apache.flink.table.types.logical.LogicalType;
-import org.apache.flink.table.types.logical.LogicalTypeRoot;
 import org.apache.flink.table.types.logical.RowType;
 import org.apache.flink.types.RowKind;
-import org.apache.flink.util.Collector;
 
+import io.debezium.data.Envelope;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -66,19 +54,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 生成内部的数据格式（数据类型AbstractBaseColumn）
- * 同时符合：DebeziumDeserializationSchema接口
+ * 生成内部的数据格式（数据类型AbstractBaseColumn） 同时符合：DebeziumDeserializationSchema接口
  *
  * @program: ChunJun
  * @author: wuren
  * @create: 2021/04/14
  */
-public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceRecord, LogicalType> implements DebeziumDeserializationSchema<RowData> {
+public class MysqlCdcColumnTypeConverter
+        extends AbstractCDCRowConverter<SourceRecord, LogicalType> {
 
     public String database;
     public String schema;
     public String table;
-    public List<ImmutablePair<String, IDeserializationConverter>> runtimeConverters = new ArrayList<>();
+    public List<ImmutablePair<String, IDeserializationConverter>> runtimeConverters =
+            new ArrayList<>();
     public int arity;
     private static String currentBinlogFileName;
     private static BigDecimal currentBinlogFilePos;
@@ -88,21 +77,29 @@ public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceR
     public MysqlCdcColumnTypeConverter(TypeInformation<RowData> resultTypeInfo) {
         this.resultTypeInfo = resultTypeInfo;
         logicalTypes = new ArrayList<>();
-        ((RowType) ((InternalTypeInfo) resultTypeInfo).toLogicalType()).getFields().stream().forEach(field -> {
-            logicalTypes.add(new ImmutablePair<>(field.getName(), field.getType()));
-        });
-        arity=logicalTypes.size();
-        logicalTypes.stream().forEach(pair -> {
-            runtimeConverters.add(new ImmutablePair<>(pair.getLeft(), createInternalConverter(pair.getRight())));
-        });
-
+        ((RowType) ((InternalTypeInfo) resultTypeInfo).toLogicalType())
+                .getFields().stream()
+                        .forEach(
+                                field -> {
+                                    logicalTypes.add(
+                                            new ImmutablePair<>(field.getName(), field.getType()));
+                                });
+        arity = logicalTypes.size();
+        logicalTypes.stream()
+                .forEach(
+                        pair -> {
+                            runtimeConverters.add(
+                                    new ImmutablePair<>(
+                                            pair.getLeft(),
+                                            createInternalConverter(pair.getRight())));
+                        });
     }
 
-//    public MysqlCdcColumnTypeConverter(String database, String schema, String table) {
-//        this.database = database;
-//        this.schema = schema;
-//        this.table = table;
-//    }
+    //    public MysqlCdcColumnTypeConverter(String database, String schema, String table) {
+    //        this.database = database;
+    //        this.schema = schema;
+    //        this.table = table;
+    //    }
 
     // TODO: lisai 自定义转换器
     @Override
@@ -110,12 +107,13 @@ public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceR
         Envelope.Operation op = Envelope.operationFor(record);
         Struct value = (Struct) record.value();
         Schema valueSchema = record.valueSchema();
-//        // 获取到原数据信息
-//        this.database = value.getStruct("source").get("db").toString();
-//        this.schema = value.getStruct("source").get("schema").toString();
-//        this.table = value.getStruct("source").get("table").toString();
-//        this.currentBinlogFileName = value.getStruct("source").get("file").toString();
-//        this.currentBinlogFilePos = new BigDecimal(value.getStruct("source").get("pos").toString());
+        //        // 获取到原数据信息
+        //        this.database = value.getStruct("source").get("db").toString();
+        //        this.schema = value.getStruct("source").get("schema").toString();
+        //        this.table = value.getStruct("source").get("table").toString();
+        //        this.currentBinlogFileName = value.getStruct("source").get("file").toString();
+        //        this.currentBinlogFilePos = new
+        // BigDecimal(value.getStruct("source").get("pos").toString());
         RowData delete;
         RowData after;
         LinkedList<RowData> res = new LinkedList<>();
@@ -123,23 +121,23 @@ public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceR
             // 如果是新增数据：create
             if (op == Envelope.Operation.DELETE) {
                 delete = this.extractBeforeRow(value, valueSchema);
-//                this.validator.validate(delete, RowKind.DELETE);
+                //                this.validator.validate(delete, RowKind.DELETE);
                 delete.setRowKind(RowKind.DELETE);
                 res.add(delete);
             } else {
                 delete = this.extractBeforeRow(value, valueSchema);
-//                this.validator.validate(delete, RowKind.UPDATE_BEFORE);
+                //                this.validator.validate(delete, RowKind.UPDATE_BEFORE);
                 delete.setRowKind(RowKind.UPDATE_BEFORE);
                 // TODO: lisai update 前的数据是否需要保留？
                 res.add(delete);
                 after = this.extractAfterRow(value, valueSchema);
-//                this.validator.validate(after, RowKind.UPDATE_AFTER);
+                //                this.validator.validate(after, RowKind.UPDATE_AFTER);
                 after.setRowKind(RowKind.UPDATE_AFTER);
                 res.add(after);
             }
         } else {
             delete = this.extractAfterRow(value, valueSchema);
-//            this.validator.validate(delete, RowKind.INSERT);
+            //            this.validator.validate(delete, RowKind.INSERT);
             delete.setRowKind(RowKind.INSERT);
             res.add(delete);
         }
@@ -147,13 +145,13 @@ public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceR
     }
 
     private RowData extractAfterRow(Struct value, Schema valueSchema) throws Exception {
-//        Schema afterSchema = valueSchema.field(UpdateType.AFTER.getName()).schema();
+        //        Schema afterSchema = valueSchema.field(UpdateType.AFTER.getName()).schema();
         Struct after = value.getStruct(UpdateType.AFTER.getName());
         return genRowData(UpdateType.AFTER, after);
     }
 
     private RowData extractBeforeRow(Struct value, Schema valueSchema) throws Exception {
-//        Schema beforeSchema = valueSchema.field(UpdateType.BEFORE.getName()).schema();
+        //        Schema beforeSchema = valueSchema.field(UpdateType.BEFORE.getName()).schema();
         Struct before = value.getStruct(UpdateType.BEFORE.getName());
         return genRowData(UpdateType.BEFORE, before);
     }
@@ -166,44 +164,53 @@ public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceR
             try {
                 columnName = runtimeConverters.get(i).getLeft();
                 columnValue = struct.get(columnName).toString();
-                rowData.addField((AbstractBaseColumn) runtimeConverters.get(i).getRight().deserialize(columnValue));
+                rowData.addField(
+                        (AbstractBaseColumn)
+                                runtimeConverters.get(i).getRight().deserialize(columnValue));
             } catch (Exception e) {
-                LOG.info("Converter field {} failed with {} value of {}", columnName, updateType.getName(), columnValue.toString());
+                LOG.info(
+                        "Converter field {} failed with {} value of {}",
+                        columnName,
+                        updateType.getName(),
+                        columnValue.toString());
                 throw new Exception(e.getMessage());
             }
         }
         return rowData;
     }
 
-    /**
-     * 初始化列信息和转换器列表
-     */
+    /** 初始化列信息和转换器列表 */
     public void initColumnInfoAndConverter() {
-//        logicalTypes.stream().forEach(pair -> {
-//            runtimeConverters.add(new ImmutablePair<>(pair.getLeft(), createInternalConverter(pair.getRight())));
-//        });
-//        for (Field field : schema.fields()) {
-//            String columnName = field.name();
-//            Integer columnIndex = field.index();
-//            String columnType = field.schema().type().getName();
-//            if ("before".equalsIgnoreCase(type)) {
-//                schemaBefore.add(new ImmutableTriple<>(columnName, columnIndex, columnType));
-//            } else if ("after".equalsIgnoreCase(type)) {
-//                schemaAfter.add(new ImmutableTriple<>(columnName, columnIndex, columnType));
-//            }
-//        }
+        //        logicalTypes.stream().forEach(pair -> {
+        //            runtimeConverters.add(new ImmutablePair<>(pair.getLeft(),
+        // createInternalConverter(pair.getRight())));
+        //        });
+        //        for (Field field : schema.fields()) {
+        //            String columnName = field.name();
+        //            Integer columnIndex = field.index();
+        //            String columnType = field.schema().type().getName();
+        //            if ("before".equalsIgnoreCase(type)) {
+        //                schemaBefore.add(new ImmutableTriple<>(columnName, columnIndex,
+        // columnType));
+        //            } else if ("after".equalsIgnoreCase(type)) {
+        //                schemaAfter.add(new ImmutableTriple<>(columnName, columnIndex,
+        // columnType));
+        //            }
+        //        }
         // 设置数据捕捉标志符，避免每次都捕捉性能差。并初始化converter
-//        if (schemaBefore.size() > 0) {
-//            schemaBefore.stream().forEach(t -> {
-//                convertersBefore.add(new ImmutablePair<>(t.getLeft(), createInternalConverter(t.getRight())));
-//            });
-//            schemaBeforeFlag = true;
-//        } else if (schemaAfter.size() > 0) {
-//            schemaAfter.stream().forEach(t -> {
-//                convertersBefore.add(new ImmutablePair<>(t.getLeft(), createInternalConverter(t.getRight())));
-//            });
-//            schemaAfterFlag = true;
-//        }
+        //        if (schemaBefore.size() > 0) {
+        //            schemaBefore.stream().forEach(t -> {
+        //                convertersBefore.add(new ImmutablePair<>(t.getLeft(),
+        // createInternalConverter(t.getRight())));
+        //            });
+        //            schemaBeforeFlag = true;
+        //        } else if (schemaAfter.size() > 0) {
+        //            schemaAfter.stream().forEach(t -> {
+        //                convertersBefore.add(new ImmutablePair<>(t.getLeft(),
+        // createInternalConverter(t.getRight())));
+        //            });
+        //            schemaAfterFlag = true;
+        //        }
 
     }
 
@@ -244,36 +251,37 @@ public class MysqlCdcColumnTypeConverter extends AbstractCDCRowConverter<SourceR
      *
      * @param sourceRecord
      * @param collector
-     *
      * @throws Exception
      */
-    @Override
-    public void deserialize(SourceRecord sourceRecord, Collector<RowData> collector) throws Exception {
-        Struct value = (Struct) sourceRecord.value();
-//        Schema valueSchema = sourceRecord.valueSchema();
-
-        try {
-            // 获取到原数据信息
-            this.database = value.getStruct("source").get("db").toString();
-            this.schema = value.getStruct("source").get("schema").toString();
-            this.table = value.getStruct("source").get("table").toString();
-            currentBinlogFileName = value.getStruct("source").get("file").toString();
-            currentBinlogFilePos = new BigDecimal(value.getStruct("source").get("pos").toString());
-        } catch (Exception e) {
-//            LOG.info("SourceRecord get meta error: {}", e.getMessage());
-        }
-
-        LinkedList<RowData> rowData = this.toInternal(sourceRecord);
-        rowData.forEach(collector::collect);
-    }
-
-    /**
-     * DebeziumDeserializationSchema 实现
-     *
-     * @return
-     */
-    @Override
-    public TypeInformation<RowData> getProducedType() {
-        return this.resultTypeInfo;
-    }
+    //    @Override
+    //    public void deserialize(SourceRecord sourceRecord, Collector<RowData> collector)
+    //            throws Exception {
+    //        Struct value = (Struct) sourceRecord.value();
+    //        //        Schema valueSchema = sourceRecord.valueSchema();
+    //
+    //        try {
+    //            // 获取到原数据信息
+    //            this.database = value.getStruct("source").get("db").toString();
+    //            this.schema = value.getStruct("source").get("schema").toString();
+    //            this.table = value.getStruct("source").get("table").toString();
+    //            currentBinlogFileName = value.getStruct("source").get("file").toString();
+    //            currentBinlogFilePos = new
+    // BigDecimal(value.getStruct("source").get("pos").toString());
+    //        } catch (Exception e) {
+    //            //            LOG.info("SourceRecord get meta error: {}", e.getMessage());
+    //        }
+    //
+    //        LinkedList<RowData> rowData = this.toInternal(sourceRecord);
+    //        rowData.forEach(collector::collect);
+    //    }
+    //
+    //    /**
+    //     * DebeziumDeserializationSchema 实现
+    //     *
+    //     * @return
+    //     */
+    //    @Override
+    //    public TypeInformation<RowData> getProducedType() {
+    //        return this.resultTypeInfo;
+    //    }
 }

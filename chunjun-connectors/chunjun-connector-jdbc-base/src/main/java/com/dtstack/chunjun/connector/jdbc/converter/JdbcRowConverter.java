@@ -49,8 +49,7 @@ import java.time.LocalTime;
 
 /** Base class for all converters that convert between JDBC object and Flink internal object. */
 public class JdbcRowConverter
-        extends AbstractRowConverter<
-                ResultSet, JsonArray, String, LogicalType> {
+        extends AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,10 +66,8 @@ public class JdbcRowConverter
     }
 
     @Override
-    protected ISerializationConverter<String>
-            wrapIntoNullableExternalConverter(
-                    ISerializationConverter<String> serializationConverter,
-                    LogicalType type) {
+    protected ISerializationConverter<String> wrapIntoNullableExternalConverter(
+            ISerializationConverter<String> serializationConverter, LogicalType type) {
         final int sqlType =
                 JdbcTypeUtil.typeInformationToSqlType(
                         TypeConversions.fromDataTypeToLegacyInfo(
@@ -107,8 +104,7 @@ public class JdbcRowConverter
     }
 
     @Override
-    public String toExternal(
-            RowData rowData, String statement) throws Exception {
+    public String toExternal(RowData rowData, String statement) throws Exception {
         for (int index = 0; index < rowData.getArity(); index++) {
             toExternalConverters.get(index).serialize(rowData, index, statement);
         }
@@ -148,11 +144,16 @@ public class JdbcRowConverter
                                 : DecimalData.fromBigDecimal((BigDecimal) val, precision, scale);
             case DATE:
                 return val ->
-                        (int) ((Date.valueOf(java.lang.String.valueOf(val))).toLocalDate().toEpochDay());
+                        (int)
+                                ((Date.valueOf(java.lang.String.valueOf(val)))
+                                        .toLocalDate()
+                                        .toEpochDay());
             case TIME_WITHOUT_TIME_ZONE:
                 return val ->
                         (int)
-                                ((Time.valueOf(java.lang.String.valueOf(val))).toLocalTime().toNanoOfDay()
+                                ((Time.valueOf(java.lang.String.valueOf(val)))
+                                                .toLocalTime()
+                                                .toNanoOfDay()
                                         / 1_000_000L);
             case TIMESTAMP_WITH_TIME_ZONE:
             case TIMESTAMP_WITHOUT_TIME_ZONE:
@@ -174,8 +175,7 @@ public class JdbcRowConverter
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

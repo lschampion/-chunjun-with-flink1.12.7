@@ -113,7 +113,7 @@ public class ColumnRowDataSerializer extends TypeSerializer<RowData> {
     /** rowKind + headerInfoSize + headerInfo + extHeaderSize + extHeader + fields */
     @Override
     public void serialize(RowData record, DataOutputView target) throws IOException {
-//        ColumnRowData columnRowData = (ColumnRowData) record;
+        //        ColumnRowData columnRowData = (ColumnRowData) record;
         ColumnRowData columnRowData;
         if (record instanceof GenericRowData) {
             columnRowData = new ColumnRowData((GenericRowData) record);
@@ -305,10 +305,10 @@ public class ColumnRowDataSerializer extends TypeSerializer<RowData> {
 
             CompositeTypeSerializerUtil.IntermediateCompatibilityResult<RowData>
                     intermediateResult =
-                    CompositeTypeSerializerUtil.constructIntermediateCompatibilityResult(
-                            newColumnRowSerializer.fieldSerializers,
-                            nestedSerializersSnapshotDelegate
-                                    .getNestedSerializerSnapshots());
+                            CompositeTypeSerializerUtil.constructIntermediateCompatibilityResult(
+                                    newColumnRowSerializer.fieldSerializers,
+                                    nestedSerializersSnapshotDelegate
+                                            .getNestedSerializerSnapshots());
 
             if (intermediateResult.isCompatibleWithReconfiguredSerializer()) {
                 ColumnRowDataSerializer reconfiguredCompositeSerializer = restoreSerializer();

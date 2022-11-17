@@ -18,18 +18,11 @@
 
 package com.dtstack.chunjun.connector.mysqlcdc.converter;
 
-import com.dtstack.chunjun.connector.jdbc.statement.String;
-import com.dtstack.chunjun.converter.AbstractRowConverter;
 import com.dtstack.chunjun.throwable.UnsupportedTypeException;
 
-import io.vertx.core.json.JsonArray;
-
 import org.apache.flink.table.api.DataTypes;
-import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.types.DataType;
-import org.apache.flink.table.types.logical.LogicalType;
 
-import java.sql.ResultSet;
 import java.util.Locale;
 
 /**

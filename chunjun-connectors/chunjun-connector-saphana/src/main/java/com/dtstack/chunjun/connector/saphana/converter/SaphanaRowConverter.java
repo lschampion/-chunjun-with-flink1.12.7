@@ -80,11 +80,16 @@ public class SaphanaRowConverter extends JdbcRowConverter {
                                 : DecimalData.fromBigDecimal((BigDecimal) val, precision, scale);
             case DATE:
                 return val ->
-                        (int) ((Date.valueOf(java.lang.String.valueOf(val))).toLocalDate().toEpochDay());
+                        (int)
+                                ((Date.valueOf(java.lang.String.valueOf(val)))
+                                        .toLocalDate()
+                                        .toEpochDay());
             case TIME_WITHOUT_TIME_ZONE:
                 return val ->
                         (int)
-                                ((Time.valueOf(java.lang.String.valueOf(val))).toLocalTime().toNanoOfDay()
+                                ((Time.valueOf(java.lang.String.valueOf(val)))
+                                                .toLocalTime()
+                                                .toNanoOfDay()
                                         / 1_000_000L);
             case TIMESTAMP_WITH_TIME_ZONE:
             case TIMESTAMP_WITHOUT_TIME_ZONE:
@@ -106,8 +111,7 @@ public class SaphanaRowConverter extends JdbcRowConverter {
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

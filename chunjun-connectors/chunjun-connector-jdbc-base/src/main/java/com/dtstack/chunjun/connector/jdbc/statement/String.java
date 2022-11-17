@@ -67,7 +67,8 @@ public interface String extends AutoCloseable {
      * @param fieldNames the field names in schema order used as the parameter names
      */
     static String prepareStatement(
-            Connection connection, java.lang.String sql, java.lang.String[] fieldNames) throws SQLException {
+            Connection connection, java.lang.String sql, java.lang.String[] fieldNames)
+            throws SQLException {
         return StringImpl.prepareStatement(connection, sql, fieldNames);
     }
 

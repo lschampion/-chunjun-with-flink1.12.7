@@ -82,10 +82,10 @@ public class DynamicPreparedStmt {
         dynamicPreparedStmt.buildRowConvert();
 
         java.lang.String sql = dynamicPreparedStmt.prepareTemplates(rowKind, schemaName, tableName);
-        java.lang.String[] fieldNames = new java.lang.String[dynamicPreparedStmt.columnNameList.size()];
+        java.lang.String[] fieldNames =
+                new java.lang.String[dynamicPreparedStmt.columnNameList.size()];
         dynamicPreparedStmt.columnNameList.toArray(fieldNames);
-        dynamicPreparedStmt.string =
-                StringImpl.prepareStatement(connection, sql, fieldNames);
+        dynamicPreparedStmt.string = StringImpl.prepareStatement(connection, sql, fieldNames);
         return dynamicPreparedStmt;
     }
 
@@ -109,8 +109,7 @@ public class DynamicPreparedStmt {
             dynamicPreparedStmt.columnTypeList.add(fieldConf.getType());
         }
         java.lang.String sql = dynamicPreparedStmt.prepareTemplates(rowKind, schemaName, tableName);
-        dynamicPreparedStmt.string =
-                StringImpl.prepareStatement(connection, sql, fieldNames);
+        dynamicPreparedStmt.string = StringImpl.prepareStatement(connection, sql, fieldNames);
         return dynamicPreparedStmt;
     }
 
@@ -131,14 +130,17 @@ public class DynamicPreparedStmt {
         return dynamicPreparedStmt;
     }
 
-    protected java.lang.String prepareTemplates(RowKind rowKind, java.lang.String schemaName, java.lang.String tableName) {
+    protected java.lang.String prepareTemplates(
+            RowKind rowKind, java.lang.String schemaName, java.lang.String tableName) {
         java.lang.String singleSql = null;
         switch (rowKind) {
             case INSERT:
             case UPDATE_AFTER:
                 singleSql =
                         jdbcDialect.getInsertIntoStatement(
-                                schemaName, tableName, columnNameList.toArray(new java.lang.String[0]));
+                                schemaName,
+                                tableName,
+                                columnNameList.toArray(new java.lang.String[0]));
                 break;
             case DELETE:
             case UPDATE_BEFORE:
@@ -150,11 +152,12 @@ public class DynamicPreparedStmt {
                 // TODO 异常如何处理
                 LOG.warn("not support RowKind: {}", rowKind);
         }
-        LOG.info("DynamicPreparedStmt.prepareTemplates: ",singleSql);
+        LOG.info("DynamicPreparedStmt.prepareTemplates: ", singleSql);
         return singleSql;
     }
 
-    public void getColumnNameList(Map<java.lang.String, Integer> header, Set<java.lang.String> extHeader) {
+    public void getColumnNameList(
+            Map<java.lang.String, Integer> header, Set<java.lang.String> extHeader) {
         if (writeExtInfo) {
             columnNameList.addAll(header.keySet());
         } else {
@@ -194,8 +197,7 @@ public class DynamicPreparedStmt {
         return string;
     }
 
-    public void setFieldNamedPreparedStatement(
-            String string) {
+    public void setFieldNamedPreparedStatement(String string) {
         this.string = string;
     }
 

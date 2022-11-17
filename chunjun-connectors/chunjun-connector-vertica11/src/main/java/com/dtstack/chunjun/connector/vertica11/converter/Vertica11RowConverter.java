@@ -156,8 +156,7 @@ public class Vertica11RowConverter extends JdbcRowConverter {
      * @return
      */
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

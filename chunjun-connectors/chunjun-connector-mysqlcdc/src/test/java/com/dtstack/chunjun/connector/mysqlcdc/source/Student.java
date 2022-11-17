@@ -1,11 +1,10 @@
-package com.dtstack.chunjun.connector.mysqlcdc.entities;
+package com.dtstack.chunjun.connector.mysqlcdc.source;
 
 //        s_id int,
 //        s_name VARCHAR(20) NOT NULL DEFAULT '',
 //                s_birth date,
 //                s_sex VARCHAR(10) NOT NULL DEFAULT '',
 //                c_time datetime,
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

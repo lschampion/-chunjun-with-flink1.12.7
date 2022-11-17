@@ -103,9 +103,8 @@ public class OracleColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<String>
-            wrapIntoNullableExternalConverter(
-                    ISerializationConverter serializationConverter, LogicalType type) {
+    protected ISerializationConverter<String> wrapIntoNullableExternalConverter(
+            ISerializationConverter serializationConverter, LogicalType type) {
         return (val, index, statement) -> {
             if (((ColumnRowData) val).getField(index) == null) {
                 try {
@@ -124,8 +123,7 @@ public class OracleColumnConverter extends JdbcColumnConverter {
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

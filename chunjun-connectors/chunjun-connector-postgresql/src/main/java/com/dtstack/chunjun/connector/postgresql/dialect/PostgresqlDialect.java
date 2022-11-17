@@ -68,8 +68,8 @@ public class PostgresqlDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         return new PostgresqlColumnConverter(rowType, commonConf);
     }
 
@@ -140,7 +140,10 @@ public class PostgresqlDialect implements JdbcDialect {
     }
 
     public java.lang.String getCopyStatement(
-            java.lang.String tableName, java.lang.String[] fields, java.lang.String fieldDelimiter, java.lang.String nullVal) {
+            java.lang.String tableName,
+            java.lang.String[] fields,
+            java.lang.String fieldDelimiter,
+            java.lang.String nullVal) {
         java.lang.String fieldsExpression =
                 Arrays.stream(fields).map(this::quoteIdentifier).collect(Collectors.joining(", "));
 

@@ -81,8 +81,8 @@ public interface JdbcDialect extends Serializable {
      * @param rowType the given row type
      * @return a row converter for the database
      */
-    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getRowConverter(RowType rowType) {
+    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getRowConverter(
+            RowType rowType) {
         return new JdbcRowConverter(rowType);
     }
 
@@ -91,8 +91,8 @@ public interface JdbcDialect extends Serializable {
      *
      * @return a row converter for the database
      */
-    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType) {
+    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType) {
         return getColumnConverter(rowType, null);
     }
 
@@ -101,8 +101,8 @@ public interface JdbcDialect extends Serializable {
      *
      * @return a row converter for the database
      */
-    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    default AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         return new JdbcColumnConverter(rowType, commonConf);
     }
 
@@ -158,7 +158,8 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** 构造查询表结构的sql语句 */
-    default java.lang.String getSqlQueryFields(java.lang.String schema, java.lang.String tableName) {
+    default java.lang.String getSqlQueryFields(
+            java.lang.String schema, java.lang.String tableName) {
         return "SELECT * FROM " + buildTableInfoWithSchema(schema, tableName) + " LIMIT 0";
     }
 
@@ -179,7 +180,9 @@ public interface JdbcDialect extends Serializable {
 
     /** Get row exists statement by condition fields. Default use SELECT. */
     default java.lang.String getRowExistsStatement(
-            java.lang.String schema, java.lang.String tableName, java.lang.String[] conditionFields) {
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] conditionFields) {
         java.lang.String fieldExpressions =
                 Arrays.stream(conditionFields)
                         .map(f -> format("%s = ?", quoteIdentifier(f)))
@@ -191,7 +194,8 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** Get insert into statement. */
-    default java.lang.String getInsertIntoStatement(java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames) {
+    default java.lang.String getInsertIntoStatement(
+            java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames) {
         java.lang.String columns =
                 Arrays.stream(fieldNames)
                         .map(this::quoteIdentifier)
@@ -213,7 +217,10 @@ public interface JdbcDialect extends Serializable {
      * a sql dialect.
      */
     default java.lang.String getUpdateStatement(
-            java.lang.String schema, java.lang.String tableName, java.lang.String[] fieldNames, java.lang.String[] conditionFields) {
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] fieldNames,
+            java.lang.String[] conditionFields) {
         java.lang.String setClause =
                 Arrays.stream(fieldNames)
                         .map(f -> format("%s = ?", quoteIdentifier(f)))
@@ -234,7 +241,10 @@ public interface JdbcDialect extends Serializable {
      * Get delete one row statement by condition fields, default not use limit 1, because limit 1 is
      * a sql dialect.
      */
-    default java.lang.String getDeleteStatement(java.lang.String schema, java.lang.String tableName, java.lang.String[] conditionFields) {
+    default java.lang.String getDeleteStatement(
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] conditionFields) {
         java.lang.String conditionClause =
                 Arrays.stream(conditionFields)
                         .map(f -> format("%s = :%s", quoteIdentifier(f), f))
@@ -247,7 +257,10 @@ public interface JdbcDialect extends Serializable {
 
     /** Get select fields statement by condition fields. Default use SELECT. */
     default java.lang.String getSelectFromStatement(
-            java.lang.String schema, java.lang.String tableName, java.lang.String[] selectFields, java.lang.String[] conditionFields) {
+            java.lang.String schema,
+            java.lang.String tableName,
+            java.lang.String[] selectFields,
+            java.lang.String[] conditionFields) {
         java.lang.String selectExpressions =
                 Arrays.stream(selectFields)
                         .map(this::quoteIdentifier)
@@ -310,7 +323,8 @@ public interface JdbcDialect extends Serializable {
                         .map(this::quoteIdentifier)
                         .collect(Collectors.joining(", "));
         if (Objects.nonNull(selectCustomFields) && selectCustomFields.length > 0) {
-            selectExpressions = selectExpressions + ", " + java.lang.String.join(", ", selectCustomFields);
+            selectExpressions =
+                    selectExpressions + ", " + java.lang.String.join(", ", selectCustomFields);
         }
         StringBuilder sql = new StringBuilder(128);
         sql.append("SELECT ");
@@ -334,7 +348,8 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** build table-info with schema-info and table-name, like 'schema-info.table-name' */
-    default java.lang.String buildTableInfoWithSchema(java.lang.String schema, java.lang.String tableName) {
+    default java.lang.String buildTableInfoWithSchema(
+            java.lang.String schema, java.lang.String tableName) {
         if (StringUtils.isNotBlank(schema)) {
             return quoteIdentifier(schema) + "." + quoteIdentifier(tableName);
         } else {
@@ -353,7 +368,8 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** build split filter by range, like 'id >=0 and id < 100' */
-    default java.lang.String getSplitRangeFilter(JdbcInputSplit split, java.lang.String splitPkName) {
+    default java.lang.String getSplitRangeFilter(
+            JdbcInputSplit split, java.lang.String splitPkName) {
         StringBuilder sql = new StringBuilder(128);
         if (StringUtils.isNotBlank(split.getStartLocationOfSplit())) {
             sql.append(quoteIdentifier(splitPkName))
@@ -380,7 +396,8 @@ public interface JdbcDialect extends Serializable {
                 quoteIdentifier(splitPkName), split.getTotalNumberOfSplits(), split.getMod());
     }
 
-    default KeyUtil<?, BigInteger> initKeyUtil(java.lang.String incrementName, java.lang.String incrementType) {
+    default KeyUtil<?, BigInteger> initKeyUtil(
+            java.lang.String incrementName, java.lang.String incrementType) {
         switch (ColumnType.getType(incrementType)) {
             case TIMESTAMP:
             case DATETIME:
@@ -400,7 +417,8 @@ public interface JdbcDialect extends Serializable {
     }
 
     /** catalog/schema/table */
-    default Function<JdbcConf, Tuple3<java.lang.String, java.lang.String, java.lang.String>> getTableIdentify() {
+    default Function<JdbcConf, Tuple3<java.lang.String, java.lang.String, java.lang.String>>
+            getTableIdentify() {
         return conf -> Tuple3.of(null, conf.getSchema(), conf.getTable());
     }
 }

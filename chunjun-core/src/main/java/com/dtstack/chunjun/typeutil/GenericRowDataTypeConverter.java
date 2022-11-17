@@ -8,21 +8,10 @@ import com.dtstack.chunjun.element.column.BytesColumn;
 import com.dtstack.chunjun.element.column.NullColumn;
 import com.dtstack.chunjun.element.column.StringColumn;
 import com.dtstack.chunjun.element.column.TimestampColumn;
-import com.dtstack.chunjun.throwable.UnsupportedTypeException;
 
-import org.apache.flink.table.api.DataTypes;
-import org.apache.flink.table.data.ArrayData;
 import org.apache.flink.table.data.DecimalData;
-import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.data.StringData;
 import org.apache.flink.table.data.TimestampData;
-import org.apache.flink.table.types.DataType;
-
-import org.apache.hadoop.yarn.webapp.hamlet2.Hamlet;
-
-import scala.Array;
-
-import java.util.Locale;
 
 /**
  * @program: ChunJun
@@ -31,9 +20,7 @@ import java.util.Locale;
  */
 public class GenericRowDataTypeConverter {
 
-    /**
-     * 将MySQL数据库中的类型，转换成flink的DataType类型。 转换关系参考 com.mysql.jdbc.MysqlDefs 类里面的信息。
-     */
+    /** 将MySQL数据库中的类型，转换成flink的DataType类型。 转换关系参考 com.mysql.jdbc.MysqlDefs 类里面的信息。 */
     public static AbstractBaseColumn apply(Object v) {
         if (v instanceof Boolean) {
             return new BooleanColumn(((Boolean) v));
@@ -62,5 +49,4 @@ public class GenericRowDataTypeConverter {
         }
         return new StringColumn(v.toString());
     }
-
 }

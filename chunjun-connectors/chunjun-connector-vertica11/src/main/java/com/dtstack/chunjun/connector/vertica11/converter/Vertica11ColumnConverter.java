@@ -98,8 +98,7 @@ public class Vertica11ColumnConverter extends JdbcColumnConverter {
      * @return
      */
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

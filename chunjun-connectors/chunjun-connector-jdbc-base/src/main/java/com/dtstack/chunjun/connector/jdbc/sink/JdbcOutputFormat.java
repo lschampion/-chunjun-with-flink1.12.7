@@ -115,14 +115,10 @@ public class JdbcOutputFormat extends BaseRichOutputFormat {
         } else {
             String string =
                     String.prepareStatement(
-                            dbConn, prepareTemplates(), this.columnNameList.toArray(new java.lang.String[0]));
-            stmtProxy =
-                    new PreparedStmtProxy(
-                            string,
-                            rowConverter,
                             dbConn,
-                            jdbcConf,
-                            jdbcDialect);
+                            prepareTemplates(),
+                            this.columnNameList.toArray(new java.lang.String[0]));
+            stmtProxy = new PreparedStmtProxy(string, rowConverter, dbConn, jdbcConf, jdbcDialect);
         }
     }
 

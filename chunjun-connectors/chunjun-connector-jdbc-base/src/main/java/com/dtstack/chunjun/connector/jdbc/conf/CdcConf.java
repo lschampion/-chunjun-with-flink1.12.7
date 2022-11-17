@@ -33,9 +33,11 @@ public class CdcConf extends ChunJunCommonConf implements Serializable {
     protected String username;
     protected String password;
     protected int serverId;
+
     public String getDatabase() {
         return database;
     }
+
     protected List<SourceConnectionConf> connection;
 
     public String getHost() {

@@ -121,14 +121,14 @@ public class OracleDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getRowConverter(RowType rowType) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getRowConverter(
+            RowType rowType) {
         return new OracleRowConverter(rowType);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         return new OracleColumnConverter(rowType, commonConf);
     }
 
@@ -182,7 +182,8 @@ public class OracleDialect implements JdbcDialect {
     }
 
     @Override
-    public KeyUtil<?, BigInteger> initKeyUtil(java.lang.String incrementName, java.lang.String incrementType) {
+    public KeyUtil<?, BigInteger> initKeyUtil(
+            java.lang.String incrementName, java.lang.String incrementType) {
         switch (ColumnType.getType(incrementType)) {
             case TIMESTAMP:
             case DATE:

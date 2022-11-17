@@ -54,13 +54,9 @@ import java.util.List;
 /**
  * Base class for all converters that convert between JDBC object and Flink internal object.
  * AbstractRowConverter<SourceT, LookupT, SinkT, T>
- *
- *
  */
-
 public class JdbcColumnConverter
-        extends AbstractRowConverter<
-                ResultSet, JsonArray, String, LogicalType> {
+        extends AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> {
 
     public JdbcColumnConverter(RowType rowType) {
         this(rowType, null);
@@ -79,9 +75,8 @@ public class JdbcColumnConverter
     }
 
     @Override
-    protected ISerializationConverter<String>
-            wrapIntoNullableExternalConverter(
-                    ISerializationConverter serializationConverter, LogicalType type) {
+    protected ISerializationConverter<String> wrapIntoNullableExternalConverter(
+            ISerializationConverter serializationConverter, LogicalType type) {
         return (val, index, statement) -> {
             if (val == null || val.isNullAt(index)) {
                 statement.setObject(index, null);
@@ -124,8 +119,7 @@ public class JdbcColumnConverter
     }
 
     @Override
-    public String toExternal(
-            RowData rowData, String statement) throws Exception {
+    public String toExternal(RowData rowData, String statement) throws Exception {
         for (int index = 0; index < rowData.getArity(); index++) {
             toExternalConverters.get(index).serialize(rowData, index, statement);
         }
@@ -156,7 +150,8 @@ public class JdbcColumnConverter
                             switch (yearMonthIntervalType.getResolution()) {
                                 case YEAR:
                                     return new BigDecimalColumn(
-                                            Integer.parseInt(java.lang.String.valueOf(val).substring(0, 4)));
+                                            Integer.parseInt(
+                                                    java.lang.String.valueOf(val).substring(0, 4)));
                                 case MONTH:
                                 case YEAR_TO_MONTH:
                                 default:
@@ -195,8 +190,7 @@ public class JdbcColumnConverter
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

@@ -144,8 +144,8 @@ public class TableUtil {
     }
 
     /**
-     * only using in data sync/integration
-     * 通过多个列组成新的一个自对象列，实际上toRowDataType方法返回的是FieldsDataType类型。
+     * only using in data sync/integration 通过多个列组成新的一个自对象列，实际上toRowDataType方法返回的是FieldsDataType类型。
+     *
      * @param fieldNames field Names
      * @param types field types
      * @return

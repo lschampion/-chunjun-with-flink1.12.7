@@ -35,6 +35,7 @@ public class JobConf implements Serializable {
     private SettingConf setting = new SettingConf();
 
     public OperatorConf getReader() {
+        // TODO: lisai 目前只支持一个任务
         return content.get(0).getReader();
     }
 

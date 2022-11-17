@@ -72,14 +72,14 @@ public class Vertica11Dialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getRowConverter(RowType rowType) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getRowConverter(
+            RowType rowType) {
         return new Vertica11RowConverter(rowType);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         return new Vertica11ColumnConverter(rowType, commonConf);
     }
 
@@ -126,7 +126,8 @@ public class Vertica11Dialect implements JdbcDialect {
     }
 
     /** build select sql , such as (SELECT ? "A",? "B" FROM DUAL) */
-    public java.lang.String buildDualQueryStatement(java.lang.String[] column, java.lang.String[] types) {
+    public java.lang.String buildDualQueryStatement(
+            java.lang.String[] column, java.lang.String[] types) {
         AtomicInteger index = new AtomicInteger(0);
         StringBuilder sb = new StringBuilder("SELECT ");
         java.lang.String collect =

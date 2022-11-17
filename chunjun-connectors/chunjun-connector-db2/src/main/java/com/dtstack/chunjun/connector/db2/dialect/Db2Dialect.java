@@ -80,14 +80,14 @@ public class Db2Dialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getRowConverter(RowType rowType) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getRowConverter(
+            RowType rowType) {
         return new Db2RowConverter(rowType);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         return new Db2ColumnConverter(rowType, commonConf);
     }
 
@@ -181,7 +181,8 @@ public class Db2Dialect implements JdbcDialect {
     }
 
     @Override
-    public Function<JdbcConf, Tuple3<java.lang.String, java.lang.String, java.lang.String>> getTableIdentify() {
+    public Function<JdbcConf, Tuple3<java.lang.String, java.lang.String, java.lang.String>>
+            getTableIdentify() {
         return conf ->
                 Tuple3.of(
                         null,

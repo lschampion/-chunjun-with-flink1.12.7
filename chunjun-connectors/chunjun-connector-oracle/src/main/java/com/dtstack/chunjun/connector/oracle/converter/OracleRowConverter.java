@@ -132,14 +132,17 @@ public class OracleRowConverter extends JdbcRowConverter {
             case TIME_WITHOUT_TIME_ZONE:
                 return val ->
                         (int)
-                                ((Time.valueOf(java.lang.String.valueOf(val))).toLocalTime().toNanoOfDay()
+                                ((Time.valueOf(java.lang.String.valueOf(val)))
+                                                .toLocalTime()
+                                                .toNanoOfDay()
                                         / 1_000_000L);
             case TIMESTAMP_WITH_TIME_ZONE:
             case TIMESTAMP_WITHOUT_TIME_ZONE:
                 return val -> {
                     if (val instanceof java.lang.String) {
                         // oracle.sql.TIMESTAMP will return cast to String in lookup
-                        return TimestampData.fromTimestamp(Timestamp.valueOf((java.lang.String) val));
+                        return TimestampData.fromTimestamp(
+                                Timestamp.valueOf((java.lang.String) val));
                     } else if (val instanceof TIMESTAMP) {
                         try {
                             return TimestampData.fromTimestamp(((TIMESTAMP) val).timestampValue());
@@ -181,8 +184,7 @@ public class OracleRowConverter extends JdbcRowConverter {
     }
 
     @Override
-    protected ISerializationConverter<String> createExternalConverter(
-            LogicalType type) {
+    protected ISerializationConverter<String> createExternalConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case BOOLEAN:
                 return (val, index, statement) ->

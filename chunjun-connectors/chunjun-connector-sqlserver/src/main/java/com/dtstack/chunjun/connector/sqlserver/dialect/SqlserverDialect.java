@@ -108,14 +108,14 @@ public class SqlserverDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType) {
         return getColumnConverter(rowType, null);
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getColumnConverter(RowType rowType, ChunJunCommonConf commonConf) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getColumnConverter(
+            RowType rowType, ChunJunCommonConf commonConf) {
         if (useJtdsDriver) {
             return new SqlserverJtdsColumnConverter(rowType, commonConf);
         }
@@ -123,8 +123,8 @@ public class SqlserverDialect implements JdbcDialect {
     }
 
     @Override
-    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType>
-            getRowConverter(RowType rowType) {
+    public AbstractRowConverter<ResultSet, JsonArray, String, LogicalType> getRowConverter(
+            RowType rowType) {
         return new SqlserverMicroSoftRowConverter(rowType);
     }
 
@@ -242,7 +242,8 @@ public class SqlserverDialect implements JdbcDialect {
      * @param uniqueKeyFields
      * @return
      */
-    public List<java.lang.String> getUpdateColumns(java.lang.String[] fieldNames, java.lang.String[] uniqueKeyFields) {
+    public List<java.lang.String> getUpdateColumns(
+            java.lang.String[] fieldNames, java.lang.String[] uniqueKeyFields) {
         Set<java.lang.String> uni = new HashSet<>(Arrays.asList(uniqueKeyFields));
         List<java.lang.String> updateColumns = new ArrayList<>();
         for (java.lang.String col : fieldNames) {
@@ -286,7 +287,8 @@ public class SqlserverDialect implements JdbcDialect {
      * @param table
      * @return
      */
-    public java.lang.String getIdentityInsertOnSql(java.lang.String schema, java.lang.String table) {
+    public java.lang.String getIdentityInsertOnSql(
+            java.lang.String schema, java.lang.String table) {
         java.lang.String str = StringUtils.isEmpty(schema) ? table : schema + "." + table;
         return java.lang.String.format(
                 SET_IDENTITY_INSERT_ON_SQL, str, buildTableInfoWithSchema(schema, table));
@@ -297,7 +299,8 @@ public class SqlserverDialect implements JdbcDialect {
     }
 
     @Override
-    public KeyUtil<?, BigInteger> initKeyUtil(java.lang.String incrementName, java.lang.String incrementType) {
+    public KeyUtil<?, BigInteger> initKeyUtil(
+            java.lang.String incrementName, java.lang.String incrementType) {
         switch (ColumnType.getType(incrementType)) {
             case TIMESTAMP:
                 return new SqlserverTimestampTypeUtil();

@@ -5,20 +5,6 @@
 
 package com.dtstack.chunjun.connector.mysqlcdc.converter;
 
-import com.alibaba.ververica.cdc.debezium.DebeziumDeserializationSchema;
-import com.alibaba.ververica.cdc.debezium.utils.TemporalConversions;
-import io.debezium.data.Envelope;
-import io.debezium.data.SpecialValueDecimal;
-import io.debezium.data.VariableScaleDecimal;
-import io.debezium.data.Envelope.Operation;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.table.data.DecimalData;
 import org.apache.flink.table.data.GenericRowData;
@@ -32,22 +18,39 @@ import org.apache.flink.table.types.logical.RowType.RowField;
 import org.apache.flink.types.RowKind;
 import org.apache.flink.util.Collector;
 
+import com.alibaba.ververica.cdc.debezium.DebeziumDeserializationSchema;
+import com.alibaba.ververica.cdc.debezium.utils.TemporalConversions;
+import io.debezium.data.Envelope;
+import io.debezium.data.Envelope.Operation;
+import io.debezium.data.SpecialValueDecimal;
+import io.debezium.data.VariableScaleDecimal;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
-public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializationSchema<RowData> {
+public class MysqlRowDataDebeziumDeserializeSchema
+        implements DebeziumDeserializationSchema<RowData> {
     private static final long serialVersionUID = 1L;
     private final TypeInformation<RowData> resultTypeInfo;
-    private final MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter runtimeConverter;
+    private final MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter
+            runtimeConverter;
     private final ZoneId serverTimeZone;
     private final MysqlRowDataDebeziumDeserializeSchema.ValueValidator validator;
-//    private MysqlCdcColumnTypeConverter columnTypeConverter=new MysqlCdcColumnTypeConverter();
+    //    private MysqlCdcColumnTypeConverter columnTypeConverter=new MysqlCdcColumnTypeConverter();
 
-
-    public MysqlRowDataDebeziumDeserializeSchema(RowType rowType, TypeInformation<RowData> resultTypeInfo, MysqlRowDataDebeziumDeserializeSchema.ValueValidator validator, ZoneId serverTimeZone) {
+    public MysqlRowDataDebeziumDeserializeSchema(
+            RowType rowType,
+            TypeInformation<RowData> resultTypeInfo,
+            MysqlRowDataDebeziumDeserializeSchema.ValueValidator validator,
+            ZoneId serverTimeZone) {
         this.runtimeConverter = this.createConverter(rowType);
         this.resultTypeInfo = resultTypeInfo;
         this.validator = validator;
@@ -92,7 +95,6 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         Schema beforeSchema = valueSchema.field("before").schema();
     }
 
-
     private GenericRowData extractAfterRow(Struct value, Schema valueSchema) throws Exception {
         Schema afterSchema = valueSchema.field("after").schema();
         Struct after = value.getStruct("after");
@@ -109,11 +111,13 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         return this.resultTypeInfo;
     }
 
-    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter createConverter(LogicalType type) {
+    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter createConverter(
+            LogicalType type) {
         return this.wrapIntoNullableConverter(this.createNotNullConverter(type));
     }
 
-    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter createNotNullConverter(LogicalType type) {
+    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter
+            createNotNullConverter(LogicalType type) {
         switch (type.getTypeRoot()) {
             case NULL:
                 return (dbzObj, schema) -> {
@@ -182,7 +186,9 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         if (dbzObj instanceof Integer) {
             return (Integer) dbzObj;
         } else {
-            return dbzObj instanceof Long ? ((Long) dbzObj).intValue() : Integer.parseInt(dbzObj.toString());
+            return dbzObj instanceof Long
+                    ? ((Long) dbzObj).intValue()
+                    : Integer.parseInt(dbzObj.toString());
         }
     }
 
@@ -198,7 +204,9 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         if (dbzObj instanceof Float) {
             return (Double) dbzObj;
         } else {
-            return dbzObj instanceof Double ? (Double) dbzObj : Double.parseDouble(dbzObj.toString());
+            return dbzObj instanceof Double
+                    ? (Double) dbzObj
+                    : Double.parseDouble(dbzObj.toString());
         }
     }
 
@@ -206,7 +214,9 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         if (dbzObj instanceof Float) {
             return (Float) dbzObj;
         } else {
-            return dbzObj instanceof Double ? ((Double) dbzObj).floatValue() : Float.parseFloat(dbzObj.toString());
+            return dbzObj instanceof Double
+                    ? ((Double) dbzObj).floatValue()
+                    : Float.parseFloat(dbzObj.toString());
         }
     }
 
@@ -269,14 +279,16 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
                     return TimestampData.fromEpochMillis((Long) dbzObj);
                 case 1:
                     long micro = (Long) dbzObj;
-                    return TimestampData.fromEpochMillis(micro / 1000L, (int) (micro % 1000L * 1000L));
+                    return TimestampData.fromEpochMillis(
+                            micro / 1000L, (int) (micro % 1000L * 1000L));
                 case 2:
                     long nano = (Long) dbzObj;
                     return TimestampData.fromEpochMillis(nano / 1000000L, (int) (nano % 1000000L));
             }
         }
 
-        LocalDateTime localDateTime = TemporalConversions.toLocalDateTime(dbzObj, this.serverTimeZone);
+        LocalDateTime localDateTime =
+                TemporalConversions.toLocalDateTime(dbzObj, this.serverTimeZone);
         return TimestampData.fromLocalDateTime(localDateTime);
     }
 
@@ -284,9 +296,14 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         if (dbzObj instanceof String) {
             String str = (String) dbzObj;
             Instant instant = Instant.parse(str);
-            return TimestampData.fromLocalDateTime(LocalDateTime.ofInstant(instant, this.serverTimeZone));
+            return TimestampData.fromLocalDateTime(
+                    LocalDateTime.ofInstant(instant, this.serverTimeZone));
         } else {
-            throw new IllegalArgumentException("Unable to convert to TimestampData from unexpected value '" + dbzObj + "' of type " + dbzObj.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Unable to convert to TimestampData from unexpected value '"
+                            + dbzObj
+                            + "' of type "
+                            + dbzObj.getClass().getName());
         }
     }
 
@@ -303,11 +320,13 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
             byteBuffer.get(bytes);
             return bytes;
         } else {
-            throw new UnsupportedOperationException("Unsupported BYTES value type: " + dbzObj.getClass().getSimpleName());
+            throw new UnsupportedOperationException(
+                    "Unsupported BYTES value type: " + dbzObj.getClass().getSimpleName());
         }
     }
 
-    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter createDecimalConverter(DecimalType decimalType) {
+    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter
+            createDecimalConverter(DecimalType decimalType) {
         int precision = decimalType.getPrecision();
         int scale = decimalType.getScale();
         return (dbzObj, schema) -> {
@@ -329,16 +348,16 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         };
     }
 
-    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter createRowConverter(RowType rowType) {
+    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter
+            createRowConverter(RowType rowType) {
         MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter[] fieldConverters =
-                rowType
-                        .getFields()
-                        .stream()
+                rowType.getFields().stream()
                         .map(RowField::getType)
                         .map(this::createConverter)
-                        .toArray((x$0) -> {
-                            return new DeserializationRuntimeConverter[x$0];
-                        });
+                        .toArray(
+                                (x$0) -> {
+                                    return new DeserializationRuntimeConverter[x$0];
+                                });
         String[] fieldNames = rowType.getFieldNames().toArray(new String[0]);
         return (dbzObj, schema) -> {
             Struct struct = (Struct) dbzObj;
@@ -349,7 +368,8 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
                 String fieldName = fieldNames[i];
                 Object fieldValue = struct.get(fieldName);
                 Schema fieldSchema = schema.field(fieldName).schema();
-                Object convertedField = this.convertField(fieldConverters[i], fieldValue, fieldSchema);
+                Object convertedField =
+                        this.convertField(fieldConverters[i], fieldValue, fieldSchema);
                 row.setField(i, convertedField);
             }
 
@@ -357,11 +377,18 @@ public class MysqlRowDataDebeziumDeserializeSchema implements DebeziumDeserializ
         };
     }
 
-    private Object convertField(MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter fieldConverter, Object fieldValue, Schema fieldSchema) throws Exception {
+    private Object convertField(
+            MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter fieldConverter,
+            Object fieldValue,
+            Schema fieldSchema)
+            throws Exception {
         return fieldValue == null ? null : fieldConverter.convert(fieldValue, fieldSchema);
     }
 
-    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter wrapIntoNullableConverter(MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter converter) {
+    private MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter
+            wrapIntoNullableConverter(
+                    MysqlRowDataDebeziumDeserializeSchema.DeserializationRuntimeConverter
+                            converter) {
         return (dbzObj, schema) -> {
             return dbzObj == null ? null : converter.convert(dbzObj, schema);
         };

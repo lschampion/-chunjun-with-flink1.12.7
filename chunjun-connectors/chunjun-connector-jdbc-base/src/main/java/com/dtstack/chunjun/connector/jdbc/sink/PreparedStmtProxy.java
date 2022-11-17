@@ -116,7 +116,7 @@ public class PreparedStmtProxy implements String {
                 getPstmtCacheKey(jdbcConf.getSchema(), jdbcConf.getTable(), RowKind.INSERT),
                 DynamicPreparedStmt.buildStmt(
                         jdbcDialect,
-                        jdbcConf.getColumn(),  // List<FieldConf>
+                        jdbcConf.getColumn(), // List<FieldConf>
                         currentRowConverter,
                         currentFieldNamedPstmt));
     }
@@ -132,8 +132,7 @@ public class PreparedStmtProxy implements String {
         }
 
         currentFieldNamedPstmt =
-                (String)
-                        currentRowConverter.toExternal(row, this.currentFieldNamedPstmt);
+                (String) currentRowConverter.toExternal(row, this.currentFieldNamedPstmt);
     }
 
     public void getOrCreateFieldNamedPstmt(RowData row) throws ExecutionException {
@@ -200,8 +199,7 @@ public class PreparedStmtProxy implements String {
     public void writeSingleRecordInternal(RowData row) throws Exception {
         getOrCreateFieldNamedPstmt(row);
         currentFieldNamedPstmt =
-                (String)
-                        currentRowConverter.toExternal(row, this.currentFieldNamedPstmt);
+                (String) currentRowConverter.toExternal(row, this.currentFieldNamedPstmt);
         currentFieldNamedPstmt.execute();
     }
 
@@ -225,7 +223,8 @@ public class PreparedStmtProxy implements String {
         this.pstmtCache = cacheBuilder.build();
     }
 
-    public java.lang.String getPstmtCacheKey(java.lang.String schema, java.lang.String table, RowKind rowKind) {
+    public java.lang.String getPstmtCacheKey(
+            java.lang.String schema, java.lang.String table, RowKind rowKind) {
         return java.lang.String.format("%s_%s_%s", schema, table, rowKind);
     }
 
@@ -371,8 +370,8 @@ public class PreparedStmtProxy implements String {
     @Override
     public void reOpen(Connection connection) throws SQLException {
         this.connection = connection;
-        ConcurrentMap<java.lang.String, DynamicPreparedStmt> stringDynamicPreparedStmtConcurrentMap =
-                pstmtCache.asMap();
+        ConcurrentMap<java.lang.String, DynamicPreparedStmt>
+                stringDynamicPreparedStmtConcurrentMap = pstmtCache.asMap();
         initCache(cacheIsExpire);
         for (Map.Entry<java.lang.String, DynamicPreparedStmt> entry :
                 stringDynamicPreparedStmtConcurrentMap.entrySet()) {
