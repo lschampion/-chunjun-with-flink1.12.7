@@ -52,8 +52,11 @@ chunjun-dist/
 chunjun-dev/data/**
 output/*
 
-
-
 # dbeaver
 ./database-script/.dbeaver
 ./database-script/.settings
+
+character-set-server=utf8mb4dd
+
+!ext-jars
+!ext-jars/*
