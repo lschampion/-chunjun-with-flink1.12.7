@@ -50,7 +50,7 @@ public class LocalTest {
 //        String jobPath = userDir + "/chunjun-examples/json/stream/stream.json";
 //        String jobPath = userDir + "/chunjun-examples/json/mysql/mysql_mysql_cdc_transform-multitable-demo.json";
 //        String jobPath = userDir + "/chunjun-examples/json/mysql/mysql_mysql_cdc_transform-demo.json";
-        String jobPath = userDir + "/chunjun-examples/json/mysql/mysql_stream_cdc_transform-demo.json";
+        String jobPath = userDir + "/chunjun-examples/json/mytest/mysql_stream_cdc_transform-demo.json";
 //        String jobPath = userDir + "/chunjun-examples/json/mysql/mysql_mysql_realtime_test.json";
         String chunjunDistDir = userDir + "/start-chunjun-dist";
         String s = "";

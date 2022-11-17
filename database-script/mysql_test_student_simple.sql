@@ -3,6 +3,8 @@ show variables like '%lower%';
 
 # 查看是否开启binlog
 show variables like '%log_bin%';
+show variables like '%time_zone%';
+set time_zone = '+8:00';
 
 drop table if exists student;
 -- 学生表
